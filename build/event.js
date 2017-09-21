@@ -1174,39 +1174,9 @@ var store = (0, _redux.createStore)(_reducers2.default, window.__REDUX_DEVTOOLS_
 
 /***/ }),
 /* 24 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var initialState = {
-  count: 0,
-  urls: []
-};
-
-var reducers = function reducers() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
-  var action = arguments[1];
-
-  switch (action.type) {
-    case 'ADD_COUNT':
-      return Object.assign({}, state, { count: state.count + 1 });
-    // case 'ADD_URL':
-    //   const urlConcat = state.url.concat([action.url]);
-    //   return Object.assign(
-    //     {},
-    //     state,
-    //     { url: urlConcat }
-    //   );
-    default:
-      return state;
-  }
-};
-
-exports.default = reducers;
+throw new Error("Module build failed: SyntaxError: Unexpected token (12:6)\n\n\u001b[0m \u001b[90m 10 | \u001b[39m  \u001b[36mcase\u001b[39m \u001b[32m'ADD_COUNT'\u001b[39m\u001b[33m:\u001b[39m\n \u001b[90m 11 | \u001b[39m    \u001b[36mreturn\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 12 | \u001b[39m      \u001b[33m...\u001b[39mstate\u001b[33m,\u001b[39m\n \u001b[90m    | \u001b[39m      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 13 | \u001b[39m      count\u001b[33m:\u001b[39m state\u001b[33m.\u001b[39mcount \u001b[33m+\u001b[39m \u001b[35m1\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 14 | \u001b[39m    }\u001b[33m;\u001b[39m\n \u001b[90m 15 | \u001b[39m  \u001b[36mcase\u001b[39m \u001b[32m'ADD_URL'\u001b[39m\u001b[33m:\u001b[39m\u001b[0m\n");
 
 /***/ }),
 /* 25 */

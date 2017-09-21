@@ -18,6 +18,10 @@ class App extends Component {
     });
   }
 
+  // componentDidMount () {
+  //   document.addEventListener('click', this.props.addCount);
+  // }
+
   render () {
     return (
       <div>

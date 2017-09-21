@@ -11362,6 +11362,11 @@ var App = function (_Component) {
         });
       });
     }
+
+    // componentDidMount () {
+    //   document.addEventListener('click', this.props.addCount);
+    // }
+
   }, {
     key: 'render',
     value: function render() {
