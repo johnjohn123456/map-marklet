@@ -11361,8 +11361,11 @@ var App = function (_Component) {
   }, {
     key: 'addUrl',
     value: function addUrl() {
+      var _this3 = this;
+
       chrome.tabs.getSelected(null, function (tab) {
-        // this.props.addUrl(tab.url);
+        console.log(_this3);
+        _this3.props.addUrl(tab.url);
         console.log(tab.url);
       });
     }
@@ -11379,7 +11382,7 @@ var App = function (_Component) {
         null,
         _react2.default.createElement(
           'button',
-          { onClick: this.addUrl },
+          { onClick: this.addUrl.bind(this) },
           'Add URL'
         ),
         _react2.default.createElement('br', null),

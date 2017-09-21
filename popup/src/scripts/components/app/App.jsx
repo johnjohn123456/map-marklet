@@ -16,7 +16,8 @@ class App extends Component {
 
   addUrl () {
     chrome.tabs.getSelected(null, tab => {
-      // this.props.addUrl(tab.url);
+      console.log(this)
+      this.props.addUrl(tab.url);
       console.log(tab.url)
     });
   }
@@ -28,7 +29,7 @@ class App extends Component {
   render () {
     return (
       <div>
-        <button onClick={this.addUrl}>Add URL</button>
+        <button onClick={this.addUrl.bind(this)}>Add URL</button>
         <br />
         {this.state.url}
         {/* <button onClick={this.logProps}>Save URL</button> */}
