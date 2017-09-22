@@ -15,7 +15,7 @@ class App extends Component {
     });
   }
 
-  addUrl () {
+  addUrl = () => {
     chrome.tabs.getSelected(null, tab => {
       // console.log(this)
       this.props.addUrl(tab.url);
@@ -30,7 +30,7 @@ class App extends Component {
   render () {
     return (
       <div className="popup">
-        <button onClick={this.addUrl.bind(this)}>Add URL</button>
+        <button onClick={this.addUrl}>Add URL</button>
         <br />
         {this.state.url}
         {/* <button onClick={this.logProps}>Save URL</button> */}
@@ -42,15 +42,6 @@ class App extends Component {
 const mapStateToProps = (state) => ({
   urls: state.urls,
 });
-
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     addLeagues: (url) => dispatch({
-//       type: 'ADD_URL',
-//       url: url,
-//     }),
-//   };
-// };
 
 const mapDispatchToProps = (dispatch) => ({
   addUrl: (url) => dispatch({

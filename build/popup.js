@@ -11347,6 +11347,14 @@ var App = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
+    _this.addUrl = function () {
+      chrome.tabs.getSelected(null, function (tab) {
+        // console.log(this)
+        _this.props.addUrl(tab.url);
+        console.log(tab.url);
+      });
+    };
+
     _this.state = { url: null };
     return _this;
   }
@@ -11361,30 +11369,20 @@ var App = function (_Component) {
       });
     }
   }, {
-    key: 'addUrl',
-    value: function addUrl() {
-      var _this3 = this;
+    key: 'render',
 
-      chrome.tabs.getSelected(null, function (tab) {
-        // console.log(this)
-        _this3.props.addUrl(tab.url);
-        console.log(tab.url);
-      });
-    }
 
     // logProps () {
     //   console.log(this.props.urls)
     // }
 
-  }, {
-    key: 'render',
     value: function render() {
       return _react2.default.createElement(
         'div',
         { className: 'popup' },
         _react2.default.createElement(
           'button',
-          { onClick: this.addUrl.bind(this) },
+          { onClick: this.addUrl },
           'Add URL'
         ),
         _react2.default.createElement('br', null),
@@ -11401,15 +11399,6 @@ var mapStateToProps = function mapStateToProps(state) {
     urls: state.urls
   };
 };
-
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     addLeagues: (url) => dispatch({
-//       type: 'ADD_URL',
-//       url: url,
-//     }),
-//   };
-// };
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {

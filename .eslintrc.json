@@ -6,6 +6,7 @@
     "node": true,
     "mocha": true
   },
+  "parser": "babel-eslint",
   "extends": "eslint:recommended",
   "parserOptions": {
     "sourceType": "module",
@@ -13,7 +14,8 @@
     "ecmaFeatures": {
       "jsx": true,
       "spread": true,
-      "experimentalObjectRestSpread": true
+      "experimentalObjectRestSpread": true,
+      "classes":true
     }
   },
   "plugins": [
