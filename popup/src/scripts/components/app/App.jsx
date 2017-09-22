@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {GoogleApiWrapper} from 'google-maps-react';
 
-import {GoogleMap} from './GoogleMap';
+import GoogleMap from './GoogleMap';
 
 const AppStyle = {
   width: '600px',
@@ -10,16 +10,16 @@ const AppStyle = {
   backgroundColor :'black',
 };
 
-const buttonStyle = {
-  backgroundColor: '#778899',
-  color: 'white',
-};
-
 const mapStyle = {
   margin: '10px',
   width: '350px',
   height: '200px',
   backgroundColor :'grey',
+};
+
+const buttonStyle = {
+  backgroundColor: '#778899',
+  color: 'white',
 };
 
 class App extends Component {
@@ -33,12 +33,12 @@ class App extends Component {
     });
   }
 
-  initMap () {
-    const map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: -34.397, lng: 150.644},
-      zoom: 8,
-    });
-  }
+  // initMap () {
+  //   const map = new google.maps.Map(document.getElementById('map'), {
+  //     center: {lat: -34.397, lng: 150.644},
+  //     zoom: 8,
+  //   });
+  // }
 
   render () {
 
@@ -47,9 +47,10 @@ class App extends Component {
     }
 
     return (
-      <div>
-        <div id="map" style={mapStyle}>MAP</div>
-        {/* <GoogleMap /> */}
+      <div style={AppStyle}>
+        {/* <div id="map" style={mapStyle}>MAP</div> */}
+        {/* <GoogleMap google={this.props.google}/> */}
+        <GoogleMap />
         <button style={buttonStyle} onClick={this.addUrl}>Add URL</button>
         <br />
       </div>

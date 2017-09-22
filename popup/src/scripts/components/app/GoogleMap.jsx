@@ -1,5 +1,11 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
+
+const mapStyle = {
+  margin: '10px',
+  width: '350px',
+  height: '200px',
+  backgroundColor :'grey',
+};
 
 class GoogleMap extends Component {
   constructor (props) {
@@ -8,7 +14,8 @@ class GoogleMap extends Component {
 
   render () {
     return (
-      <div>
+      <div style={mapStyle}>
+        MAP
       </div>
     );
   }
