@@ -33,13 +33,6 @@ class App extends Component {
     });
   }
 
-  // initMap () {
-  //   const map = new google.maps.Map(document.getElementById('map'), {
-  //     center: {lat: -34.397, lng: 150.644},
-  //     zoom: 8,
-  //   });
-  // }
-
   render () {
 
     if (!this.props.loaded) {
@@ -48,9 +41,7 @@ class App extends Component {
 
     return (
       <div style={AppStyle}>
-        {/* <div id="map" style={mapStyle}>MAP</div> */}
-        {/* <GoogleMap google={this.props.google}/> */}
-        <GoogleMap />
+        <GoogleMap google={this.props.google}/>/>
         <button style={buttonStyle} onClick={this.addUrl}>Add URL</button>
         <br />
       </div>

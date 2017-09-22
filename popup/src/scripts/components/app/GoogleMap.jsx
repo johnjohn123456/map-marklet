@@ -12,10 +12,28 @@ class GoogleMap extends Component {
     super(props);
   }
 
+  componentDidMount () {
+    this.loadMap();
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    if (prevProps.google !== this.props.google) {
+      this.loadMap();
+    }
+  }
+
+  loadMap () {
+    if (this.props && this.props.google) {
+      const {google} = this.props;
+      const maps = google.maps;
+      console.log(google)
+    }
+  }
+
   render () {
     return (
       <div style={mapStyle}>
-        MAP
+        MAP boondogles
       </div>
     );
   }

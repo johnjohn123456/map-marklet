@@ -11854,15 +11854,6 @@ var App = function (_Component) {
 
   _createClass(App, [{
     key: 'render',
-
-
-    // initMap () {
-    //   const map = new google.maps.Map(document.getElementById('map'), {
-    //     center: {lat: -34.397, lng: 150.644},
-    //     zoom: 8,
-    //   });
-    // }
-
     value: function render() {
 
       if (!this.props.loaded) {
@@ -11876,7 +11867,8 @@ var App = function (_Component) {
       return _react2.default.createElement(
         'div',
         { style: AppStyle },
-        _react2.default.createElement(_GoogleMap2.default, null),
+        _react2.default.createElement(_GoogleMap2.default, { google: this.props.google }),
+        '/>',
         _react2.default.createElement(
           'button',
           { style: buttonStyle, onClick: this.addUrl },
@@ -11955,12 +11947,34 @@ var GoogleMap = function (_Component) {
   }
 
   _createClass(GoogleMap, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.loadMap();
+    }
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(prevProps, prevState) {
+      if (prevProps.google !== this.props.google) {
+        this.loadMap();
+      }
+    }
+  }, {
+    key: 'loadMap',
+    value: function loadMap() {
+      if (this.props && this.props.google) {
+        var google = this.props.google;
+
+        var maps = google.maps;
+        console.log(google);
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
       return _react2.default.createElement(
         'div',
         { style: mapStyle },
-        'MAP'
+        'MAP boondogles'
       );
     }
   }]);
