@@ -11337,6 +11337,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+// import './styles.css';
+
 var App = function (_Component) {
   _inherits(App, _Component);
 
@@ -11364,22 +11366,22 @@ var App = function (_Component) {
       var _this3 = this;
 
       chrome.tabs.getSelected(null, function (tab) {
-        console.log(_this3);
+        // console.log(this)
         _this3.props.addUrl(tab.url);
         console.log(tab.url);
       });
     }
-  }, {
-    key: 'logProps',
-    value: function logProps() {
-      console.log(this.props.urls);
-    }
+
+    // logProps () {
+    //   console.log(this.props.urls)
+    // }
+
   }, {
     key: 'render',
     value: function render() {
       return _react2.default.createElement(
         'div',
-        null,
+        { className: 'popup' },
         _react2.default.createElement(
           'button',
           { onClick: this.addUrl.bind(this) },
@@ -11399,6 +11401,15 @@ var mapStateToProps = function mapStateToProps(state) {
     urls: state.urls
   };
 };
+
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     addLeagues: (url) => dispatch({
+//       type: 'ADD_URL',
+//       url: url,
+//     }),
+//   };
+// };
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+// import './styles.css';
 
 class App extends Component {
   constructor (props) {
@@ -16,19 +17,19 @@ class App extends Component {
 
   addUrl () {
     chrome.tabs.getSelected(null, tab => {
-      console.log(this)
+      // console.log(this)
       this.props.addUrl(tab.url);
       console.log(tab.url)
     });
   }
 
-  logProps () {
-    console.log(this.props.urls)
-  }
+  // logProps () {
+  //   console.log(this.props.urls)
+  // }
 
   render () {
     return (
-      <div>
+      <div className="popup">
         <button onClick={this.addUrl.bind(this)}>Add URL</button>
         <br />
         {this.state.url}
@@ -42,6 +43,15 @@ const mapStateToProps = (state) => ({
   urls: state.urls,
 });
 
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     addLeagues: (url) => dispatch({
+//       type: 'ADD_URL',
+//       url: url,
+//     }),
+//   };
+// };
+
 const mapDispatchToProps = (dispatch) => ({
   addUrl: (url) => dispatch({
     type: 'ADD_URL',
@@ -49,4 +59,4 @@ const mapDispatchToProps = (dispatch) => ({
   }),
 });
 
-export default connect (mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
