@@ -1,5 +1,26 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {GoogleApiWrapper} from 'google-maps-react';
+
+import {GoogleMap} from './GoogleMap';
+
+const AppStyle = {
+  width: '600px',
+  height: '400px',
+  backgroundColor :'black',
+};
+
+const buttonStyle = {
+  backgroundColor: '#778899',
+  color: 'white',
+};
+
+const mapStyle = {
+  margin: '10px',
+  width: '350px',
+  height: '200px',
+  backgroundColor :'grey',
+};
 
 class App extends Component {
   constructor (props) {
@@ -12,10 +33,24 @@ class App extends Component {
     });
   }
 
+  initMap () {
+    const map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: -34.397, lng: 150.644},
+      zoom: 8,
+    });
+  }
+
   render () {
+
+    if (!this.props.loaded) {
+      return <div>Loading...</div>;
+    }
+
     return (
-      <div className="popup">
-        <button onClick={this.addUrl}>Add URL here</button>
+      <div>
+        <div id="map" style={mapStyle}>MAP</div>
+        {/* <GoogleMap /> */}
+        <button style={buttonStyle} onClick={this.addUrl}>Add URL</button>
         <br />
       </div>
     );
@@ -33,4 +68,8 @@ const mapDispatchToProps = (dispatch) => ({
   }),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+const connectAppToRedux = connect(mapStateToProps, mapDispatchToProps)(App);
+
+export default GoogleApiWrapper({
+  apiKey: 'AIzaSyC6xXldmd60eN7osRK0BPQjoCsMKYo0eiI',
+})(connectAppToRedux);

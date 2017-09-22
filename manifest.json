@@ -13,6 +13,7 @@
     "default_title": "RCR Example",
     "default_popup": "popup.html"
   },
+  "content_security_policy": "script-src 'self' https://maps.googleapis.com; object-src 'self'",
   "content_scripts": [
     {
       "matches": ["*://*/*"],
