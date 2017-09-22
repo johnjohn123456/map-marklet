@@ -1,18 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-// import './styles.css';
 
 class App extends Component {
   constructor (props) {
     super(props);
-
-    this.state = {url: null};
-  }
-
-  componentDidMount () {
-    chrome.tabs.getSelected(null, tab => {
-      this.setState({ url: tab.url });
-    });
   }
 
   addUrl = () => {
@@ -24,10 +15,8 @@ class App extends Component {
   render () {
     return (
       <div className="popup">
-        <button onClick={this.addUrl}>Add URL</button>
+        <button onClick={this.addUrl}>Add URL here</button>
         <br />
-        {this.state.url}
-        {/* <button onClick={this.logProps}>Save URL</button> */}
       </div>
     );
   }
