@@ -17,15 +17,9 @@ class App extends Component {
 
   addUrl = () => {
     chrome.tabs.getSelected(null, tab => {
-      // console.log(this)
       this.props.addUrl(tab.url);
-      console.log(tab.url)
     });
   }
-
-  // logProps () {
-  //   console.log(this.props.urls)
-  // }
 
   render () {
     return (

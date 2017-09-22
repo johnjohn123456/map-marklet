@@ -11349,9 +11349,7 @@ var App = function (_Component) {
 
     _this.addUrl = function () {
       chrome.tabs.getSelected(null, function (tab) {
-        // console.log(this)
         _this.props.addUrl(tab.url);
-        console.log(tab.url);
       });
     };
 
@@ -11370,12 +11368,6 @@ var App = function (_Component) {
     }
   }, {
     key: 'render',
-
-
-    // logProps () {
-    //   console.log(this.props.urls)
-    // }
-
     value: function render() {
       return _react2.default.createElement(
         'div',

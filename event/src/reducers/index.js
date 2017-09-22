@@ -1,17 +1,11 @@
 import uuid from 'uuid/v1';
 
 const initialState = {
-  count: 0,
   urls: {},
 };
 
 const reducers = (state = initialState, action) => {
   switch (action.type) {
-  case 'ADD_COUNT':
-    return {
-      ...state,
-      count: state.count + 1,
-    };
   case 'ADD_URL':
     return {
       ...state,
@@ -27,18 +21,5 @@ const reducers = (state = initialState, action) => {
     return state;
   }
 };
-
-// const reducers = (state = initialState, action) => {
-//   switch (action.type) {
-//   case 'ADD_COUNT':
-//     return Object.assign(
-//       {},
-//       state,
-//       { count: state.count + 1 }
-//     );
-//   default:
-//     return state;
-//   }
-// };
 
 export default reducers;

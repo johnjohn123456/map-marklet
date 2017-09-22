@@ -1198,7 +1198,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var initialState = {
-  count: 0,
   urls: {}
 };
 
@@ -1207,10 +1206,6 @@ var reducers = function reducers() {
   var action = arguments[1];
 
   switch (action.type) {
-    case 'ADD_COUNT':
-      return _extends({}, state, {
-        count: state.count + 1
-      });
     case 'ADD_URL':
       return _extends({}, state, {
         urls: _extends({}, state.urls, _defineProperty({}, (0, _v2.default)(), {
@@ -1222,19 +1217,6 @@ var reducers = function reducers() {
       return state;
   }
 };
-
-// const reducers = (state = initialState, action) => {
-//   switch (action.type) {
-//   case 'ADD_COUNT':
-//     return Object.assign(
-//       {},
-//       state,
-//       { count: state.count + 1 }
-//     );
-//   default:
-//     return state;
-//   }
-// };
 
 exports.default = reducers;
 

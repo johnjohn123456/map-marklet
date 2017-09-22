@@ -11343,62 +11343,20 @@ var App = function (_Component) {
   function App(props) {
     _classCallCheck(this, App);
 
-    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
-
-    _this.state = {
-      count: 0
-    };
-    return _this;
+    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
   }
 
   _createClass(App, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      var _this2 = this;
-
-      document.addEventListener('click', function () {
-        _this2.props.dispatch({
-          type: 'ADD_COUNT'
-        });
-      });
-    }
-
-    // componentDidMount () {
-    //   document.addEventListener('click', this.props.addCount);
-    // }
-
-  }, {
     key: 'render',
     value: function render() {
-      return _react2.default.createElement(
-        'div',
-        null,
-        'Count: ',
-        this.props.count
-      );
+      return _react2.default.createElement('div', null);
     }
   }]);
 
   return App;
 }(_react.Component);
 
-var mapStateToProps = function mapStateToProps(state) {
-  return {
-    count: state.count
-  };
-};
-
-var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-  return {
-    addCount: function addCount() {
-      return dispatch({
-        type: 'ADD_COUNT'
-      });
-    }
-  };
-};
-
-exports.default = (0, _reactRedux.connect)(mapStateToProps)(App);
+exports.default = App;
 
 /***/ }),
 /* 111 */
