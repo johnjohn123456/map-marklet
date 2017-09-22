@@ -9,9 +9,9 @@
   "author": "Tyler Shaddix",
   "dependencies": {
     "google-maps-react": "^1.1.0",
-    "react": "^15.5.0",
+    "react": "^15.6.1",
     "react-chrome-redux": "0.0.7",
-    "react-dom": "^15.5.0",
+    "react-dom": "^15.6.1",
     "react-redux": "^4.4.8",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",

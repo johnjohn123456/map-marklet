@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
+
 
 const mapStyle = {
   margin: '10px',
@@ -24,15 +26,21 @@ class GoogleMap extends Component {
 
   loadMap () {
     if (this.props && this.props.google) {
+      //if the google api has loaded into props
       const {google} = this.props;
       const maps = google.maps;
+      //reference to GoogleMap's div node
+      const mapRef = this.refs.map;
+      const node = ReactDOM.findDOMNode(mapRef);
+      console.log(mapRef)
+      console.log(node)
       console.log(google)
     }
   }
 
   render () {
     return (
-      <div style={mapStyle}>
+      <div ref="map" style={mapStyle}>
         MAP boondogles
       </div>
     );
