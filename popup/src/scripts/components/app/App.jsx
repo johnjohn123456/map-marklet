@@ -27,16 +27,23 @@ class App extends Component {
     super(props);
   }
 
-  addUrl = () => {
-    chrome.tabs.getSelected(null, tab => {
-      this.props.addUrl(tab.url);
-    });
-  }
+  // addUrl = () => {
+  //   chrome.tabs.getSelected(null, tab => {
+  //     this.props.addUrl(tab.url);
+  //   });
+  // }
 
-  sendLocation = () => {
-    const lat = document.getElementById('lat').value;
-    const lng = document.getElementById('lng').value;
-    // const coordinates
+  // addLocation = () => {
+  //   const center = {
+  //     lat: document.getElementById('lat').value,
+  //     lng: document.getElementById('lng').value,
+  //   };
+  // };
+
+  addMarker = () => {
+    chrome.tabs.getSelected(null, tab => {
+      this.props.addMarker({url: tab.url});
+    });
   };
 
   render () {
@@ -48,11 +55,10 @@ class App extends Component {
     return (
       <div style={AppStyle}>
         <GoogleMap google={this.props.google} />
-        <button style={buttonStyle} onClick={this.addUrl}>Add URL</button>
         <br />
         <input id="lat" type="text" placeholder="latitude" />
         <input id="lng" type="text" placeholder="longitude" />
-        <button style={buttonStyle} onClick={this.sendLocation}>Send Location</button>
+        <button style={buttonStyle} onClick={this.addMarker}>Add Marker</button>
       </div>
     );
   }
@@ -63,9 +69,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  addUrl: (url) => dispatch({
+  addMarker: (marker) => dispatch({
     type: 'ADD_URL',
-    url: url,
+    url: marker.url,
+    // location: location,
   }),
 });
 

@@ -11843,20 +11843,27 @@ var App = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
-    _this.addUrl = function () {
+    _this.addMarker = function () {
       chrome.tabs.getSelected(null, function (tab) {
-        _this.props.addUrl(tab.url);
+        _this.props.addMarker({ url: tab.url });
       });
-    };
-
-    _this.sendLocation = function () {
-      var lat = document.getElementById('lat').value;
-      var lng = document.getElementById('lng').value;
-      // const coordinates
     };
 
     return _this;
   }
+
+  // addUrl = () => {
+  //   chrome.tabs.getSelected(null, tab => {
+  //     this.props.addUrl(tab.url);
+  //   });
+  // }
+
+  // addLocation = () => {
+  //   const center = {
+  //     lat: document.getElementById('lat').value,
+  //     lng: document.getElementById('lng').value,
+  //   };
+  // };
 
   _createClass(App, [{
     key: 'render',
@@ -11874,18 +11881,13 @@ var App = function (_Component) {
         'div',
         { style: AppStyle },
         _react2.default.createElement(_GoogleMap2.default, { google: this.props.google }),
-        _react2.default.createElement(
-          'button',
-          { style: buttonStyle, onClick: this.addUrl },
-          'Add URL'
-        ),
         _react2.default.createElement('br', null),
         _react2.default.createElement('input', { id: 'lat', type: 'text', placeholder: 'latitude' }),
         _react2.default.createElement('input', { id: 'lng', type: 'text', placeholder: 'longitude' }),
         _react2.default.createElement(
           'button',
-          { style: buttonStyle, onClick: this.sendLocation },
-          'Send Location'
+          { style: buttonStyle, onClick: this.addMarker },
+          'Add Marker'
         )
       );
     }
@@ -11902,10 +11904,11 @@ var mapStateToProps = function mapStateToProps(state) {
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
-    addUrl: function addUrl(url) {
+    addMarker: function addMarker(marker) {
       return dispatch({
         type: 'ADD_URL',
-        url: url
+        url: marker.url
+        // location: location,
       });
     }
   };
