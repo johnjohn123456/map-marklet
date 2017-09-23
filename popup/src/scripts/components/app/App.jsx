@@ -7,7 +7,7 @@ import GoogleMap from './GoogleMap';
 const AppStyle = {
   width: '600px',
   height: '400px',
-  backgroundColor :'black',
+  backgroundColor :'gray',
 };
 
 const mapStyle = {
@@ -41,7 +41,7 @@ class App extends Component {
 
     return (
       <div style={AppStyle}>
-        <GoogleMap google={this.props.google}/>/>
+        <GoogleMap google={this.props.google} />
         <button style={buttonStyle} onClick={this.addUrl}>Add URL</button>
         <br />
       </div>

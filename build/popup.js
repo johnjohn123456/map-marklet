@@ -11820,7 +11820,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var AppStyle = {
   width: '600px',
   height: '400px',
-  backgroundColor: 'black'
+  backgroundColor: 'gray'
 };
 
 var mapStyle = {
@@ -11868,7 +11868,6 @@ var App = function (_Component) {
         'div',
         { style: AppStyle },
         _react2.default.createElement(_GoogleMap2.default, { google: this.props.google }),
-        '/>',
         _react2.default.createElement(
           'button',
           { style: buttonStyle, onClick: this.addUrl },
@@ -11936,8 +11935,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var mapStyle = {
   margin: '10px',
-  width: '350px',
-  height: '200px',
+  width: '550px',
+  height: '350px',
   backgroundColor: 'grey'
 };
 
@@ -11958,6 +11957,7 @@ var GoogleMap = function (_Component) {
   }, {
     key: 'componentDidUpdate',
     value: function componentDidUpdate(prevProps, prevState) {
+      //check if props has been updated when app is first loaded
       if (prevProps.google !== this.props.google) {
         this.loadMap();
       }
@@ -11973,9 +11973,16 @@ var GoogleMap = function (_Component) {
         //reference to GoogleMap's div node
         var mapRef = this.refs.map;
         var node = _reactDom2.default.findDOMNode(mapRef);
-        console.log(mapRef);
-        console.log(node);
-        console.log(google);
+
+        var zoom = 14;
+        var lat = 1.290270;
+        var lng = 103.851959;
+        var center = new maps.LatLng(lat, lng);
+        var mapConfig = {
+          center: center,
+          zoom: zoom
+        };
+        this.map = new maps.Map(node, mapConfig);
       }
     }
   }, {
