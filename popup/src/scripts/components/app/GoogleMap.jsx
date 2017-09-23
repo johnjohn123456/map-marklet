@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 
 
 const mapStyle = {
@@ -12,7 +13,16 @@ const mapStyle = {
 class GoogleMap extends Component {
   constructor (props) {
     super(props);
+
+    const {lat, lng} = this.props.initialCenter;
+    this.state = {
+      currentLocation: {
+        lat: lat,
+        lng: lng,
+      },
+    };
   }
+
 
   componentDidMount () {
     this.loadMap();
@@ -34,10 +44,9 @@ class GoogleMap extends Component {
       const mapRef = this.refs.map;
       const node = ReactDOM.findDOMNode(mapRef);
 
-      let zoom = 14;
-      let lat = 1.290270;
-      let lng = 103.851959;
-      const center = new maps.LatLng(lat, lng);
+      let {initialCenter, zoom} = this.props;
+      const {lat, lng} = this.state.currentLocation;
+      const center = {lat, lng};
       const mapConfig = {
         center: center,
         zoom: zoom,
@@ -54,5 +63,19 @@ class GoogleMap extends Component {
     );
   }
 }
+
+GoogleMap.propTypes = {
+  google: PropTypes.object,
+  zoom: PropTypes.number,
+  initialCenter: PropTypes.object,
+};
+
+GoogleMap.defaultProps = {
+  zoom: 13,
+  initialCenter: {
+    lat: 1.351128,
+    lng: 103.872199,
+  },
+};
 
 export default GoogleMap;
