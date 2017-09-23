@@ -11847,10 +11847,8 @@ var App = function (_Component) {
     _this.addMarker = function () {
       chrome.tabs.getSelected(null, function (tab) {
         _this.props.addMarker({
-          name: _this.state.name,
           url: tab.url,
-          center: _this.state.center,
-          address: _this.state.address
+          place: _this.state.place
         });
       });
     };
@@ -11863,33 +11861,25 @@ var App = function (_Component) {
       autocomplete.addListener('place_changed', function () {
         var place = autocomplete.getPlace();
         _this.setState({
-          name: place.name,
-          address: place.formatted_address,
-          center: {
-            lat: place.geometry.location.lat(),
-            lng: place.geometry.location.lng()
-          }
+          place: place
         });
         console.log(place);
       });
     };
 
-    _this.state = {
-      name: '',
-      address: '',
-      center: {}
-    };
+    _this.state = {};
 
     return _this;
   }
 
   _createClass(App, [{
-    key: 'componentDidUpdate',
-    value: function componentDidUpdate(prevProps, prevState) {
-      console.log(this.state);
-    }
-  }, {
     key: 'render',
+
+
+    // componentDidUpdate (prevProps, prevState) {
+    //   console.log(this.state)
+    // }
+
     value: function render() {
 
       if (!this.props.loaded) {
@@ -11929,10 +11919,8 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     addMarker: function addMarker(marker) {
       return dispatch({
         type: 'ADD_URL',
-        name: marker.name,
         url: marker.url,
-        center: marker.center,
-        address: marker.address
+        place: marker.place
       });
     }
   };

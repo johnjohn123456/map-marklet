@@ -24,21 +24,15 @@ class App extends Component {
   constructor (props) {
     super(props);
 
-    this.state = {
-      name: '',
-      address: '',
-      center: {},
-    };
+    this.state = {};
 
   }
 
   addMarker = () => {
     chrome.tabs.getSelected(null, tab => {
       this.props.addMarker({
-        name: this.state.name,
         url: tab.url,
-        center: this.state.center,
-        address: this.state.address,
+        place: this.state.place,
       });
     });
   };
@@ -51,20 +45,15 @@ class App extends Component {
     autocomplete.addListener('place_changed', () => {
       let place = autocomplete.getPlace();
       this.setState({
-        name: place.name,
-        address: place.formatted_address,
-        center: {
-          lat: place.geometry.location.lat(),
-          lng: place.geometry.location.lng(),
-        },
+        place: place,
       });
       console.log(place)
     });
   }
 
-  componentDidUpdate (prevProps, prevState) {
-    console.log(this.state)
-  }
+  // componentDidUpdate (prevProps, prevState) {
+  //   console.log(this.state)
+  // }
 
   render () {
 
@@ -90,10 +79,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   addMarker: (marker) => dispatch({
     type: 'ADD_URL',
-    name: marker.name,
     url: marker.url,
-    center: marker.center,
-    address: marker.address,
+    place: marker.place,
   }),
 });
 
