@@ -11849,6 +11849,12 @@ var App = function (_Component) {
       });
     };
 
+    _this.sendLocation = function () {
+      var lat = document.getElementById('lat').value;
+      var lng = document.getElementById('lng').value;
+      // const coordinates
+    };
+
     return _this;
   }
 
@@ -11873,7 +11879,14 @@ var App = function (_Component) {
           { style: buttonStyle, onClick: this.addUrl },
           'Add URL'
         ),
-        _react2.default.createElement('br', null)
+        _react2.default.createElement('br', null),
+        _react2.default.createElement('input', { id: 'lat', type: 'text', placeholder: 'latitude' }),
+        _react2.default.createElement('input', { id: 'lng', type: 'text', placeholder: 'longitude' }),
+        _react2.default.createElement(
+          'button',
+          { style: buttonStyle, onClick: this.sendLocation },
+          'Send Location'
+        )
       );
     }
   }]);
@@ -11957,7 +11970,7 @@ var GoogleMap = function (_Component) {
         lng = _this$props$initialCe.lng;
 
     _this.state = {
-      currentLocation: {
+      currentCenter: {
         lat: lat,
         lng: lng
       }
@@ -11990,12 +12003,11 @@ var GoogleMap = function (_Component) {
         var mapRef = this.refs.map;
         var node = _reactDom2.default.findDOMNode(mapRef);
 
-        var _props = this.props,
-            initialCenter = _props.initialCenter,
-            zoom = _props.zoom;
-        var _state$currentLocatio = this.state.currentLocation,
-            lat = _state$currentLocatio.lat,
-            lng = _state$currentLocatio.lng;
+        var zoom = this.props.zoom; //zoom set via default props
+        //currentCenter set to default props initialCenter in state
+        var _state$currentCenter = this.state.currentCenter,
+            lat = _state$currentCenter.lat,
+            lng = _state$currentCenter.lng;
 
         var center = { lat: lat, lng: lng };
         var mapConfig = {

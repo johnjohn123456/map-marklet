@@ -16,7 +16,7 @@ class GoogleMap extends Component {
 
     const {lat, lng} = this.props.initialCenter;
     this.state = {
-      currentLocation: {
+      currentCenter: {
         lat: lat,
         lng: lng,
       },
@@ -44,8 +44,9 @@ class GoogleMap extends Component {
       const mapRef = this.refs.map;
       const node = ReactDOM.findDOMNode(mapRef);
 
-      let {initialCenter, zoom} = this.props;
-      const {lat, lng} = this.state.currentLocation;
+      let zoom = this.props.zoom; //zoom set via default props
+      //currentCenter set to default props initialCenter in state
+      const {lat, lng} = this.state.currentCenter;
       const center = {lat, lng};
       const mapConfig = {
         center: center,

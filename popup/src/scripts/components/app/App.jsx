@@ -33,6 +33,12 @@ class App extends Component {
     });
   }
 
+  sendLocation = () => {
+    const lat = document.getElementById('lat').value;
+    const lng = document.getElementById('lng').value;
+    // const coordinates
+  };
+
   render () {
 
     if (!this.props.loaded) {
@@ -44,6 +50,9 @@ class App extends Component {
         <GoogleMap google={this.props.google} />
         <button style={buttonStyle} onClick={this.addUrl}>Add URL</button>
         <br />
+        <input id="lat" type="text" placeholder="latitude" />
+        <input id="lng" type="text" placeholder="longitude" />
+        <button style={buttonStyle} onClick={this.sendLocation}>Send Location</button>
       </div>
     );
   }
