@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
 import {GoogleApiWrapper} from 'google-maps-react';
 
@@ -27,19 +28,6 @@ class App extends Component {
     super(props);
   }
 
-  // addUrl = () => {
-  //   chrome.tabs.getSelected(null, tab => {
-  //     this.props.addUrl(tab.url);
-  //   });
-  // }
-
-  // addLocation = () => {
-  //   const center = {
-  //     lat: document.getElementById('lat').value,
-  //     lng: document.getElementById('lng').value,
-  //   };
-  // };
-
   addMarker = () => {
     const center = {
       lat: document.getElementById('lat').value,
@@ -53,6 +41,12 @@ class App extends Component {
     });
   };
 
+  findCenter = () => {
+    const findCenterInputRef = this.refs.findCenter;
+    const node = ReactDOM.findDOMNode(findCenterInputRef);
+    console.log(node)
+  }
+
   render () {
 
     if (!this.props.loaded) {
@@ -65,6 +59,7 @@ class App extends Component {
         <br />
         <input id="lat" type="text" placeholder="latitude" />
         <input id="lng" type="text" placeholder="longitude" />
+        <input id="findCenter" type="text" ref="findCenter" onChange={this.findCenter} placeholder="find location"/>
         <button style={buttonStyle} onClick={this.addMarker}>Add Marker</button>
       </div>
     );
