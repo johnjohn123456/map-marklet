@@ -41,8 +41,15 @@ class App extends Component {
   // };
 
   addMarker = () => {
+    const center = {
+      lat: document.getElementById('lat').value,
+      lng: document.getElementById('lng').value,
+    };
     chrome.tabs.getSelected(null, tab => {
-      this.props.addMarker({url: tab.url});
+      this.props.addMarker({
+        url: tab.url,
+        center: center,
+      });
     });
   };
 
@@ -72,7 +79,7 @@ const mapDispatchToProps = (dispatch) => ({
   addMarker: (marker) => dispatch({
     type: 'ADD_URL',
     url: marker.url,
-    // location: location,
+    center: marker.center,
   }),
 });
 

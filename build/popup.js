@@ -11844,8 +11844,15 @@ var App = function (_Component) {
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
     _this.addMarker = function () {
+      var center = {
+        lat: document.getElementById('lat').value,
+        lng: document.getElementById('lng').value
+      };
       chrome.tabs.getSelected(null, function (tab) {
-        _this.props.addMarker({ url: tab.url });
+        _this.props.addMarker({
+          url: tab.url,
+          center: center
+        });
       });
     };
 
@@ -11907,8 +11914,8 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     addMarker: function addMarker(marker) {
       return dispatch({
         type: 'ADD_URL',
-        url: marker.url
-        // location: location,
+        url: marker.url,
+        center: marker.center
       });
     }
   };

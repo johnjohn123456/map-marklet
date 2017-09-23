@@ -13,7 +13,7 @@ const reducers = (state = initialState, action) => {
         ...state.urls,
         [uuid()]: {
           url: action.url,
-          // location: action.location,
+          center: action.center,
         },
       },
     };
