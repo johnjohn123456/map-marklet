@@ -16,32 +16,54 @@ const buttonStyle = {
   color: 'white',
 };
 
+const inputStyle = {
+  width: '300px',
+};
+
 class App extends Component {
   constructor (props) {
     super(props);
+
+    this.state = {
+      name: '',
+      address: '',
+      center: {},
+    };
+
   }
 
   addMarker = () => {
-    const center = {
-      lat: document.getElementById('lat').value,
-      lng: document.getElementById('lng').value,
-    };
     chrome.tabs.getSelected(null, tab => {
       this.props.addMarker({
+        name: this.state.name,
         url: tab.url,
-        center: center,
+        center: this.state.center,
+        address: this.state.address,
       });
     });
   };
 
-  findCenter = () => {
+  findCenter = (e) => {
+    const savedEvent = e;
     const findCenterInputRef = this.refs.findCenter;
     const input = ReactDOM.findDOMNode(findCenterInputRef);
     const autocomplete = new google.maps.places.Autocomplete(input);
     autocomplete.addListener('place_changed', () => {
       let place = autocomplete.getPlace();
-      console.log(place);
+      this.setState({
+        name: place.name,
+        address: place.formatted_address,
+        center: {
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+        },
+      });
+      console.log(place)
     });
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    console.log(this.state)
   }
 
   render () {
@@ -54,9 +76,7 @@ class App extends Component {
       <div style={AppStyle}>
         <GoogleMap google={this.props.google} />
         <br />
-        <input id="lat" type="text" placeholder="latitude" />
-        <input id="lng" type="text" placeholder="longitude" />
-        <input id="findCenter" type="text" ref="findCenter" onChange={this.findCenter} placeholder="find location"/>
+        <input id="findCenter" style={inputStyle} type="text" ref="findCenter" onKeyPress={this.findCenter} placeholder="find location"/>
         <button style={buttonStyle} onClick={this.addMarker}>Add Marker</button>
       </div>
     );
@@ -70,8 +90,10 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   addMarker: (marker) => dispatch({
     type: 'ADD_URL',
+    name: marker.name,
     url: marker.url,
     center: marker.center,
+    address: marker.address,
   }),
 });
 

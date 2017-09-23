@@ -11832,6 +11832,10 @@ var buttonStyle = {
   color: 'white'
 };
 
+var inputStyle = {
+  width: '300px'
+};
+
 var App = function (_Component) {
   _inherits(App, _Component);
 
@@ -11841,32 +11845,50 @@ var App = function (_Component) {
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
     _this.addMarker = function () {
-      var center = {
-        lat: document.getElementById('lat').value,
-        lng: document.getElementById('lng').value
-      };
       chrome.tabs.getSelected(null, function (tab) {
         _this.props.addMarker({
+          name: _this.state.name,
           url: tab.url,
-          center: center
+          center: _this.state.center,
+          address: _this.state.address
         });
       });
     };
 
-    _this.findCenter = function () {
+    _this.findCenter = function (e) {
+      var savedEvent = e;
       var findCenterInputRef = _this.refs.findCenter;
       var input = _reactDom2.default.findDOMNode(findCenterInputRef);
       var autocomplete = new google.maps.places.Autocomplete(input);
       autocomplete.addListener('place_changed', function () {
         var place = autocomplete.getPlace();
+        _this.setState({
+          name: place.name,
+          address: place.formatted_address,
+          center: {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng()
+          }
+        });
         console.log(place);
       });
+    };
+
+    _this.state = {
+      name: '',
+      address: '',
+      center: {}
     };
 
     return _this;
   }
 
   _createClass(App, [{
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(prevProps, prevState) {
+      console.log(this.state);
+    }
+  }, {
     key: 'render',
     value: function render() {
 
@@ -11883,9 +11905,7 @@ var App = function (_Component) {
         { style: AppStyle },
         _react2.default.createElement(_GoogleMap2.default, { google: this.props.google }),
         _react2.default.createElement('br', null),
-        _react2.default.createElement('input', { id: 'lat', type: 'text', placeholder: 'latitude' }),
-        _react2.default.createElement('input', { id: 'lng', type: 'text', placeholder: 'longitude' }),
-        _react2.default.createElement('input', { id: 'findCenter', type: 'text', ref: 'findCenter', onChange: this.findCenter, placeholder: 'find location' }),
+        _react2.default.createElement('input', { id: 'findCenter', style: inputStyle, type: 'text', ref: 'findCenter', onKeyPress: this.findCenter, placeholder: 'find location' }),
         _react2.default.createElement(
           'button',
           { style: buttonStyle, onClick: this.addMarker },
@@ -11909,8 +11929,10 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     addMarker: function addMarker(marker) {
       return dispatch({
         type: 'ADD_URL',
+        name: marker.name,
         url: marker.url,
-        center: marker.center
+        center: marker.center,
+        address: marker.address
       });
     }
   };

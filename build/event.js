@@ -1209,8 +1209,10 @@ var reducers = function reducers() {
     case 'ADD_URL':
       return _extends({}, state, {
         urls: _extends({}, state.urls, _defineProperty({}, (0, _v2.default)(), {
+          name: action.name,
           url: action.url,
-          center: action.center
+          center: action.center,
+          address: action.address
         }))
       });
     default:
