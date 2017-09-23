@@ -7,15 +7,8 @@ import GoogleMap from './GoogleMap';
 
 const AppStyle = {
   width: '600px',
-  height: '400px',
+  height: '600px',
   backgroundColor :'gray',
-};
-
-const mapStyle = {
-  margin: '10px',
-  width: '350px',
-  height: '200px',
-  backgroundColor :'grey',
 };
 
 const buttonStyle = {
@@ -43,8 +36,12 @@ class App extends Component {
 
   findCenter = () => {
     const findCenterInputRef = this.refs.findCenter;
-    const node = ReactDOM.findDOMNode(findCenterInputRef);
-    console.log(node)
+    const input = ReactDOM.findDOMNode(findCenterInputRef);
+    const autocomplete = new google.maps.places.Autocomplete(input);
+    autocomplete.addListener('place_changed', () => {
+      let place = autocomplete.getPlace();
+      console.log(place);
+    });
   }
 
   render () {

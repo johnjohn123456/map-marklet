@@ -11823,15 +11823,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var AppStyle = {
   width: '600px',
-  height: '400px',
+  height: '600px',
   backgroundColor: 'gray'
-};
-
-var mapStyle = {
-  margin: '10px',
-  width: '350px',
-  height: '200px',
-  backgroundColor: 'grey'
 };
 
 var buttonStyle = {
@@ -11862,8 +11855,12 @@ var App = function (_Component) {
 
     _this.findCenter = function () {
       var findCenterInputRef = _this.refs.findCenter;
-      var node = _reactDom2.default.findDOMNode(findCenterInputRef);
-      console.log(node);
+      var input = _reactDom2.default.findDOMNode(findCenterInputRef);
+      var autocomplete = new google.maps.places.Autocomplete(input);
+      autocomplete.addListener('place_changed', function () {
+        var place = autocomplete.getPlace();
+        console.log(place);
+      });
     };
 
     return _this;
@@ -11959,10 +11956,10 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var mapStyle = {
-  margin: '10px',
+  margin: '5px',
   width: '550px',
   height: '350px',
-  backgroundColor: 'grey'
+  backgroundColor: 'green'
 };
 
 var GoogleMap = function (_Component) {
@@ -12028,11 +12025,7 @@ var GoogleMap = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      return _react2.default.createElement(
-        'div',
-        { ref: 'map', style: mapStyle },
-        'MAP boondogles'
-      );
+      return _react2.default.createElement('div', { ref: 'map', style: mapStyle });
     }
   }]);
 

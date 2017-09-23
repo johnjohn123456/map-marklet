@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 
 
 const mapStyle = {
-  margin: '10px',
+  margin: '5px',
   width: '550px',
   height: '350px',
-  backgroundColor :'grey',
+  backgroundColor :'green',
 };
 
 class GoogleMap extends Component {
@@ -59,7 +59,6 @@ class GoogleMap extends Component {
   render () {
     return (
       <div ref="map" style={mapStyle}>
-        MAP boondogles
       </div>
     );
   }
