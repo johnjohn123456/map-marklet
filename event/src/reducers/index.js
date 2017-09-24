@@ -14,6 +14,7 @@ const reducers = (state = initialState, action) => {
         [uuid()]: {
           url: action.url,
           place: action.place,
+          date: action.date,
         },
       },
     };

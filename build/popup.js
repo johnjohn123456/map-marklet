@@ -11848,7 +11848,8 @@ var App = function (_Component) {
       chrome.tabs.getSelected(null, function (tab) {
         _this.props.addMarker({
           url: tab.url,
-          place: _this.state.place
+          place: _this.state.place,
+          date: _this.state.date
         });
       });
     };
@@ -11860,10 +11861,11 @@ var App = function (_Component) {
       var autocomplete = new google.maps.places.Autocomplete(input);
       autocomplete.addListener('place_changed', function () {
         var place = autocomplete.getPlace();
+        var date = new Date();
         _this.setState({
-          place: place
+          place: place,
+          date: date.toString()
         });
-        console.log(place);
       });
     };
 
@@ -11873,13 +11875,12 @@ var App = function (_Component) {
   }
 
   _createClass(App, [{
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(prevProps, prevState) {
+      // console.log(this.state)
+    }
+  }, {
     key: 'render',
-
-
-    // componentDidUpdate (prevProps, prevState) {
-    //   console.log(this.state)
-    // }
-
     value: function render() {
 
       if (!this.props.loaded) {
@@ -11920,7 +11921,8 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
       return dispatch({
         type: 'ADD_URL',
         url: marker.url,
-        place: marker.place
+        place: marker.place,
+        date: marker.date
       });
     }
   };

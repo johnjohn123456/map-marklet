@@ -33,6 +33,7 @@ class App extends Component {
       this.props.addMarker({
         url: tab.url,
         place: this.state.place,
+        date: this.state.date,
       });
     });
   };
@@ -44,16 +45,17 @@ class App extends Component {
     const autocomplete = new google.maps.places.Autocomplete(input);
     autocomplete.addListener('place_changed', () => {
       let place = autocomplete.getPlace();
+      const date = new Date();
       this.setState({
         place: place,
+        date: date.toString(),
       });
-      console.log(place)
     });
   }
 
-  // componentDidUpdate (prevProps, prevState) {
-  //   console.log(this.state)
-  // }
+  componentDidUpdate (prevProps, prevState) {
+    // console.log(this.state)
+  }
 
   render () {
 
@@ -81,6 +83,7 @@ const mapDispatchToProps = (dispatch) => ({
     type: 'ADD_URL',
     url: marker.url,
     place: marker.place,
+    date: marker.date,
   }),
 });
 

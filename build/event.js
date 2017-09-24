@@ -1210,7 +1210,8 @@ var reducers = function reducers() {
       return _extends({}, state, {
         urls: _extends({}, state.urls, _defineProperty({}, (0, _v2.default)(), {
           url: action.url,
-          place: action.place
+          place: action.place,
+          date: action.date
         }))
       });
     default:
