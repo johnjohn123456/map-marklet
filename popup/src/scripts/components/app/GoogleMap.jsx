@@ -36,6 +36,9 @@ class GoogleMap extends Component {
     if (prevProps.markers !== this.props.markers) {
       this.getLatestMarker();
     }
+    if (prevState !== this.state) {
+      this.loadMap();
+    }
   }
 
   loadMap () {
@@ -72,7 +75,13 @@ class GoogleMap extends Component {
       return bDate > aDate ? b : a;
     });
 
-    
+    this.setState({
+      currentCenter: {
+        lat: latestAddedMarker.place.geometry.location.lat,
+        lng: latestAddedMarker.place.geometry.location.lng,
+      },
+    });
+
     console.log(latestAddedMarker.place.geometry.location)
     console.log('lat: ' + latestAddedMarker.place.geometry.location.lat)
     console.log('lng: ' + latestAddedMarker.place.geometry.location.lng)

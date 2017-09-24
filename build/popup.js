@@ -12010,6 +12010,9 @@ var GoogleMap = function (_Component) {
       if (prevProps.markers !== this.props.markers) {
         this.getLatestMarker();
       }
+      if (prevState !== this.state) {
+        this.loadMap();
+      }
     }
   }, {
     key: 'loadMap',
@@ -12052,6 +12055,13 @@ var GoogleMap = function (_Component) {
         var aDate = new Date(a.date);
         var bDate = new Date(b.date);
         return bDate > aDate ? b : a;
+      });
+
+      this.setState({
+        currentCenter: {
+          lat: latestAddedMarker.place.geometry.location.lat,
+          lng: latestAddedMarker.place.geometry.location.lng
+        }
       });
 
       console.log(latestAddedMarker.place.geometry.location);
