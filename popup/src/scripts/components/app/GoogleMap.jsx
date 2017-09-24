@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
+import Marker from './Marker';
 
 const mapStyle = {
   margin: '5px',
@@ -25,6 +26,10 @@ class GoogleMap extends Component {
 
 
   componentDidMount () {
+    const markers = Object.keys(this.props.markers)
+    if (markers.length > 0) {
+      this.getLatestMarker();
+    }
     this.loadMap();
   }
 
@@ -81,16 +86,21 @@ class GoogleMap extends Component {
         lng: latestAddedMarker.place.geometry.location.lng,
       },
     });
+  }
 
-    console.log(latestAddedMarker.place.geometry.location)
-    console.log('lat: ' + latestAddedMarker.place.geometry.location.lat)
-    console.log('lng: ' + latestAddedMarker.place.geometry.location.lng)
-
+  renderMarkers () {
+    if (this.props.markers) {
+      const markers = this.props.markers;
+      return Object.keys(markers).map(marker => {
+        return <Marker key={marker} marker={markers[marker]}/>;
+      });
+    }
   }
 
   render () {
     return (
       <div ref="map" style={mapStyle}>
+        {this.renderMarkers()}
       </div>
     );
   }
