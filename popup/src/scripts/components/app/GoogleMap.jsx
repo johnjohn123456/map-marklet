@@ -35,7 +35,6 @@ class GoogleMap extends Component {
     }
     if (prevProps.markers !== this.props.markers) {
       this.getLatestMarker();
-      // const currentCenter = getLatestMarker();
     }
   }
 
@@ -61,18 +60,23 @@ class GoogleMap extends Component {
   }
 
   getLatestMarker () {
-    const urls = this.props.markers;
-    let latest = {};
+    //transpose markers from obj into array
+    const markers = [];
+    Object.keys(this.props.markers).forEach((marker) => {
+      markers.push(this.props.markers[marker]);
+    });
 
-    // for (uuid in urls) {
-    //   const place = urls[uuid];
-    //   const date = new Date(place.date);
-    //   if (Object.keys(obj).length === 0 && obj.constructor === Object
-    //       || date > latest.date) {
-    //     latest = place;
-    //   }
-    // }
-    // console.log(latest);
+    const latestAddedMarker = markers.reduce((a,b)=>{
+      const aDate = new Date(a.date);
+      const bDate = new Date(b.date);
+      return bDate > aDate ? b : a;
+    });
+
+    
+    console.log(latestAddedMarker.place.geometry.location)
+    console.log('lat: ' + latestAddedMarker.place.geometry.location.lat)
+    console.log('lng: ' + latestAddedMarker.place.geometry.location.lng)
+
   }
 
   render () {

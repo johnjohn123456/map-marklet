@@ -1,7 +1,7 @@
 import uuid from 'uuid/v1';
 
 const initialState = {
-  urls: {},
+  markers: {},
 };
 
 const reducers = (state = initialState, action) => {
@@ -9,8 +9,8 @@ const reducers = (state = initialState, action) => {
   case 'ADD_URL':
     return {
       ...state,
-      urls: {
-        ...state.urls,
+      markers: {
+        ...state.markers,
         [uuid()]: {
           url: action.url,
           place: action.place,

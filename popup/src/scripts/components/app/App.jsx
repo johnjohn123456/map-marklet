@@ -54,7 +54,7 @@ class App extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
-    // console.log(this.props.urls)
+    // console.log(this.props.markers)
   }
 
   render () {
@@ -65,7 +65,7 @@ class App extends Component {
 
     return (
       <div style={AppStyle}>
-        <GoogleMap google={this.props.google} markers={this.props.urls} />
+        <GoogleMap google={this.props.google} markers={this.props.markers} />
         <br />
         <input id="findCenter" style={inputStyle} type="text" ref="findCenter" onKeyPress={this.findCenter} placeholder="find location"/>
         <button style={buttonStyle} onClick={this.addMarker}>Add Marker</button>
@@ -75,7 +75,7 @@ class App extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  urls: state.urls,
+  markers: state.markers,
 });
 
 const mapDispatchToProps = (dispatch) => ({

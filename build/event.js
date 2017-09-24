@@ -1198,7 +1198,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var initialState = {
-  urls: {}
+  markers: {}
 };
 
 var reducers = function reducers() {
@@ -1208,7 +1208,7 @@ var reducers = function reducers() {
   switch (action.type) {
     case 'ADD_URL':
       return _extends({}, state, {
-        urls: _extends({}, state.urls, _defineProperty({}, (0, _v2.default)(), {
+        markers: _extends({}, state.markers, _defineProperty({}, (0, _v2.default)(), {
           url: action.url,
           place: action.place,
           date: action.date

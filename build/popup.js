@@ -11877,7 +11877,7 @@ var App = function (_Component) {
   _createClass(App, [{
     key: 'componentDidUpdate',
     value: function componentDidUpdate(prevProps, prevState) {
-      // console.log(this.props.urls)
+      // console.log(this.props.markers)
     }
   }, {
     key: 'render',
@@ -11894,7 +11894,7 @@ var App = function (_Component) {
       return _react2.default.createElement(
         'div',
         { style: AppStyle },
-        _react2.default.createElement(_GoogleMap2.default, { google: this.props.google, markers: this.props.urls }),
+        _react2.default.createElement(_GoogleMap2.default, { google: this.props.google, markers: this.props.markers }),
         _react2.default.createElement('br', null),
         _react2.default.createElement('input', { id: 'findCenter', style: inputStyle, type: 'text', ref: 'findCenter', onKeyPress: this.findCenter, placeholder: 'find location' }),
         _react2.default.createElement(
@@ -11911,7 +11911,7 @@ var App = function (_Component) {
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
-    urls: state.urls
+    markers: state.markers
   };
 };
 
@@ -12009,7 +12009,6 @@ var GoogleMap = function (_Component) {
       }
       if (prevProps.markers !== this.props.markers) {
         this.getLatestMarker();
-        // const currentCenter = getLatestMarker();
       }
     }
   }, {
@@ -12041,18 +12040,23 @@ var GoogleMap = function (_Component) {
   }, {
     key: 'getLatestMarker',
     value: function getLatestMarker() {
-      var urls = this.props.markers;
-      var latest = {};
+      var _this2 = this;
 
-      // for (uuid in urls) {
-      //   const place = urls[uuid];
-      //   const date = new Date(place.date);
-      //   if (Object.keys(obj).length === 0 && obj.constructor === Object
-      //       || date > latest.date) {
-      //     latest = place;
-      //   }
-      // }
-      // console.log(latest);
+      //transpose markers from obj into array
+      var markers = [];
+      Object.keys(this.props.markers).forEach(function (marker) {
+        markers.push(_this2.props.markers[marker]);
+      });
+
+      var latestAddedMarker = markers.reduce(function (a, b) {
+        var aDate = new Date(a.date);
+        var bDate = new Date(b.date);
+        return bDate > aDate ? b : a;
+      });
+
+      console.log(latestAddedMarker.place.geometry.location);
+      console.log('lat: ' + latestAddedMarker.place.geometry.location.lat);
+      console.log('lng: ' + latestAddedMarker.place.geometry.location.lng);
     }
   }, {
     key: 'render',
