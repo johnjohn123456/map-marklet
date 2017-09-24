@@ -11877,7 +11877,7 @@ var App = function (_Component) {
   _createClass(App, [{
     key: 'componentDidUpdate',
     value: function componentDidUpdate(prevProps, prevState) {
-      // console.log(this.state)
+      // console.log(this.props.urls)
     }
   }, {
     key: 'render',
@@ -11894,7 +11894,7 @@ var App = function (_Component) {
       return _react2.default.createElement(
         'div',
         { style: AppStyle },
-        _react2.default.createElement(_GoogleMap2.default, { google: this.props.google }),
+        _react2.default.createElement(_GoogleMap2.default, { google: this.props.google, markers: this.props.urls }),
         _react2.default.createElement('br', null),
         _react2.default.createElement('input', { id: 'findCenter', style: inputStyle, type: 'text', ref: 'findCenter', onKeyPress: this.findCenter, placeholder: 'find location' }),
         _react2.default.createElement(
@@ -12007,6 +12007,10 @@ var GoogleMap = function (_Component) {
       if (prevProps.google !== this.props.google) {
         this.loadMap();
       }
+      if (prevProps.markers !== this.props.markers) {
+        this.getLatestMarker();
+        // const currentCenter = getLatestMarker();
+      }
     }
   }, {
     key: 'loadMap',
@@ -12033,6 +12037,22 @@ var GoogleMap = function (_Component) {
         };
         this.map = new maps.Map(node, mapConfig);
       }
+    }
+  }, {
+    key: 'getLatestMarker',
+    value: function getLatestMarker() {
+      var urls = this.props.markers;
+      var latest = {};
+
+      // for (uuid in urls) {
+      //   const place = urls[uuid];
+      //   const date = new Date(place.date);
+      //   if (Object.keys(obj).length === 0 && obj.constructor === Object
+      //       || date > latest.date) {
+      //     latest = place;
+      //   }
+      // }
+      // console.log(latest);
     }
   }, {
     key: 'render',

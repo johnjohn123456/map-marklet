@@ -54,7 +54,7 @@ class App extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
-    // console.log(this.state)
+    // console.log(this.props.urls)
   }
 
   render () {
@@ -65,7 +65,7 @@ class App extends Component {
 
     return (
       <div style={AppStyle}>
-        <GoogleMap google={this.props.google} />
+        <GoogleMap google={this.props.google} markers={this.props.urls} />
         <br />
         <input id="findCenter" style={inputStyle} type="text" ref="findCenter" onKeyPress={this.findCenter} placeholder="find location"/>
         <button style={buttonStyle} onClick={this.addMarker}>Add Marker</button>

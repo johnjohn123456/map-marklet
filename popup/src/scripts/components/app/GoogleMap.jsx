@@ -33,6 +33,10 @@ class GoogleMap extends Component {
     if (prevProps.google !== this.props.google) {
       this.loadMap();
     }
+    if (prevProps.markers !== this.props.markers) {
+      this.getLatestMarker();
+      // const currentCenter = getLatestMarker();
+    }
   }
 
   loadMap () {
@@ -54,6 +58,21 @@ class GoogleMap extends Component {
       };
       this.map = new maps.Map(node, mapConfig);
     }
+  }
+
+  getLatestMarker () {
+    const urls = this.props.markers;
+    let latest = {};
+
+    // for (uuid in urls) {
+    //   const place = urls[uuid];
+    //   const date = new Date(place.date);
+    //   if (Object.keys(obj).length === 0 && obj.constructor === Object
+    //       || date > latest.date) {
+    //     latest = place;
+    //   }
+    // }
+    // console.log(latest);
   }
 
   render () {
