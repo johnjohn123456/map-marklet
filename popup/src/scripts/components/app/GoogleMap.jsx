@@ -64,8 +64,11 @@ class GoogleMap extends Component {
         zoom: zoom,
       };
       this.map = new maps.Map(node, mapConfig);
+
+      //add listener for clicks on map to place markers
       this.map.addListener('click', (e) => {
-        this.props.placeMarker(e.latLng);
+        const date = new Date();
+        this.props.placeMarker(e.latLng, date);
       });
     }
   }

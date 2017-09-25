@@ -7110,9 +7110,7 @@ var Marker = function (_Component) {
       var google = this.props.google;
       var map = this.props.map;
       var markerInfo = this.props.marker;
-      console.log(markerInfo);
       var marker = new google.maps.Marker({
-        // position: markerInfo.place.geometry.location,
         position: markerInfo.latLng,
         map: map,
         title: markerInfo.title
@@ -11954,21 +11952,24 @@ var App = function (_Component) {
       });
     };
 
+    _this.placeMarker = function (latLng, date) {
+      console.log(latLng);
+      _this.setState({
+        place: null,
+        latLng: latLng,
+        date: date.toString()
+      });
+    };
+
     _this.state = {};
 
     return _this;
   }
 
+  //when a place is selected in the autocomplete field, setState with place data.
+
+
   _createClass(App, [{
-    key: 'placeMarker',
-    value: function placeMarker(latLng) {
-      console.log(latLng);
-      // const lat = latLng.lat
-      // this.props.addMarker({
-      //
-      // })
-    }
-  }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
       var _this2 = this;
@@ -12151,8 +12152,11 @@ var GoogleMap = function (_Component) {
           zoom: zoom
         };
         this.map = new maps.Map(node, mapConfig);
+
+        //add listener for clicks on map to place markers
         this.map.addListener('click', function (e) {
-          _this2.props.placeMarker(e.latLng);
+          var date = new Date();
+          _this2.props.placeMarker(e.latLng, date);
         });
       }
     }

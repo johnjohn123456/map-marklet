@@ -41,6 +41,7 @@ class App extends Component {
     });
   };
 
+  //when a place is selected in the autocomplete field, setState with place data.
   findCenter = (e) => {
     const savedEvent = e;
     const findCenterInputRef = this.refs.findCenter;
@@ -57,12 +58,13 @@ class App extends Component {
     });
   }
 
-  placeMarker (latLng) {
-    console.log(latLng)
-    // const lat = latLng.lat
-    // this.props.addMarker({
-    //
-    // })
+  placeMarker = (latLng, date) => {
+    console.log(latLng);
+    this.setState({
+      place: null,
+      latLng: latLng,
+      date: date.toString(),
+    });
   }
 
   componentWillReceiveProps (nextProps) {
