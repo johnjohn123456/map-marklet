@@ -11953,7 +11953,6 @@ var App = function (_Component) {
     };
 
     _this.placeMarker = function (latLng, date) {
-      console.log(latLng);
       _this.setState({
         place: null,
         latLng: latLng,
@@ -11978,7 +11977,7 @@ var App = function (_Component) {
       if (nextProps.markers !== this.props.markers) {
         setTimeout(function () {
           _this2.setState({ foo: new Date() });
-        }, 500);
+        }, 100);
       }
     }
   }, {
@@ -12156,9 +12155,20 @@ var GoogleMap = function (_Component) {
         //add listener for clicks on map to place markers
         this.map.addListener('click', function (e) {
           var date = new Date();
+          _this2.placeTempMarker(e.latLng, _this2.map);
           _this2.props.placeMarker(e.latLng, date);
         });
       }
+    }
+  }, {
+    key: 'placeTempMarker',
+    value: function placeTempMarker(latLng, map) {
+      var google = this.props.google;
+      var marker = new google.maps.Marker({
+        position: latLng,
+        map: map
+      });
+      map.panTo(latLng);
     }
   }, {
     key: 'getLatestMarker',

@@ -68,9 +68,19 @@ class GoogleMap extends Component {
       //add listener for clicks on map to place markers
       this.map.addListener('click', (e) => {
         const date = new Date();
+        this.placeTempMarker(e.latLng, this.map);
         this.props.placeMarker(e.latLng, date);
       });
     }
+  }
+
+  placeTempMarker (latLng, map) {
+    const google = this.props.google;
+    const marker = new google.maps.Marker({
+      position: latLng,
+      map: map,
+    });
+    map.panTo(latLng);
   }
 
   getLatestMarker () {

@@ -59,7 +59,6 @@ class App extends Component {
   }
 
   placeMarker = (latLng, date) => {
-    console.log(latLng);
     this.setState({
       place: null,
       latLng: latLng,
@@ -72,7 +71,7 @@ class App extends Component {
     if (nextProps.markers !== this.props.markers) {
       setTimeout(() => {
         this.setState({foo:new Date()});
-      }, 500);
+      }, 100);
     }
   }
 
