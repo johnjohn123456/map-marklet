@@ -27,10 +27,6 @@ class App extends Component {
 
     this.state = {};
 
-    // setTimeout(() => {
-    //   console.log(this);
-    //   this.setState({foo:new Date()})
-    // }, 500);
   }
 
   addMarker = () => {
@@ -39,6 +35,7 @@ class App extends Component {
         url: tab.url,
         title: tab.title,
         place: this.state.place,
+        latLng: this.state.latLng,
         date: this.state.date,
       });
     });
@@ -50,18 +47,22 @@ class App extends Component {
     const input = ReactDOM.findDOMNode(findCenterInputRef);
     const autocomplete = new google.maps.places.Autocomplete(input);
     autocomplete.addListener('place_changed', () => {
-      console.log('state changed in App.jsx')
       let place = autocomplete.getPlace();
       const date = new Date();
       this.setState({
         place: place,
+        latLng: place.geometry.location,
         date: date.toString(),
       });
     });
   }
 
-  componentDidUpdate (prevProps, prevState) {
-    // console.log(this.props.markers)
+  placeMarker (latLng) {
+    console.log(latLng)
+    // const lat = latLng.lat
+    // this.props.addMarker({
+    //
+    // })
   }
 
   componentWillReceiveProps (nextProps) {
@@ -79,11 +80,9 @@ class App extends Component {
       return <div>Loading...</div>;
     }
 
-    console.log('MARKERS', this.props.marker);
-
     return (
       <div style={AppStyle}>
-        <GoogleMap google={this.props.google} markers={this.props.markers} />
+        <GoogleMap google={this.props.google} markers={this.props.markers} placeMarker={this.placeMarker}/>
         <br />
         <input id="findCenter" style={inputStyle} type="text" ref="findCenter" onKeyPress={this.findCenter} placeholder="find location"/>
         <button style={buttonStyle} onClick={this.addMarker}>Add Marker</button>
@@ -102,6 +101,7 @@ const mapDispatchToProps = (dispatch) => ({
     url: marker.url,
     title: marker.title,
     place: marker.place,
+    latLng: marker.latLng,
     date: marker.date,
   }),
 });

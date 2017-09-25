@@ -7110,8 +7110,10 @@ var Marker = function (_Component) {
       var google = this.props.google;
       var map = this.props.map;
       var markerInfo = this.props.marker;
+      console.log(markerInfo);
       var marker = new google.maps.Marker({
-        position: markerInfo.place.geometry.location,
+        // position: markerInfo.place.geometry.location,
+        position: markerInfo.latLng,
         map: map,
         title: markerInfo.title
       });
@@ -11930,6 +11932,7 @@ var App = function (_Component) {
           url: tab.url,
           title: tab.title,
           place: _this.state.place,
+          latLng: _this.state.latLng,
           date: _this.state.date
         });
       });
@@ -11941,11 +11944,11 @@ var App = function (_Component) {
       var input = _reactDom2.default.findDOMNode(findCenterInputRef);
       var autocomplete = new google.maps.places.Autocomplete(input);
       autocomplete.addListener('place_changed', function () {
-        console.log('state changed in App.jsx');
         var place = autocomplete.getPlace();
         var date = new Date();
         _this.setState({
           place: place,
+          latLng: place.geometry.location,
           date: date.toString()
         });
       });
@@ -11953,17 +11956,17 @@ var App = function (_Component) {
 
     _this.state = {};
 
-    // setTimeout(() => {
-    //   console.log(this);
-    //   this.setState({foo:new Date()})
-    // }, 500);
     return _this;
   }
 
   _createClass(App, [{
-    key: 'componentDidUpdate',
-    value: function componentDidUpdate(prevProps, prevState) {
-      // console.log(this.props.markers)
+    key: 'placeMarker',
+    value: function placeMarker(latLng) {
+      console.log(latLng);
+      // const lat = latLng.lat
+      // this.props.addMarker({
+      //
+      // })
     }
   }, {
     key: 'componentWillReceiveProps',
@@ -11989,12 +11992,10 @@ var App = function (_Component) {
         );
       }
 
-      console.log('MARKERS', this.props.marker);
-
       return _react2.default.createElement(
         'div',
         { style: AppStyle },
-        _react2.default.createElement(_GoogleMap2.default, { google: this.props.google, markers: this.props.markers }),
+        _react2.default.createElement(_GoogleMap2.default, { google: this.props.google, markers: this.props.markers, placeMarker: this.placeMarker }),
         _react2.default.createElement('br', null),
         _react2.default.createElement('input', { id: 'findCenter', style: inputStyle, type: 'text', ref: 'findCenter', onKeyPress: this.findCenter, placeholder: 'find location' }),
         _react2.default.createElement(
@@ -12023,6 +12024,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
         url: marker.url,
         title: marker.title,
         place: marker.place,
+        latLng: marker.latLng,
         date: marker.date
       });
     }
@@ -12126,6 +12128,8 @@ var GoogleMap = function (_Component) {
   }, {
     key: 'loadMap',
     value: function loadMap() {
+      var _this2 = this;
+
       if (this.props && this.props.google) {
         //if the google api has loaded into props
         var google = this.props.google;
@@ -12147,17 +12151,20 @@ var GoogleMap = function (_Component) {
           zoom: zoom
         };
         this.map = new maps.Map(node, mapConfig);
+        this.map.addListener('click', function (e) {
+          _this2.props.placeMarker(e.latLng);
+        });
       }
     }
   }, {
     key: 'getLatestMarker',
     value: function getLatestMarker() {
-      var _this2 = this;
+      var _this3 = this;
 
       //transpose markers from obj into array
       var markers = [];
       Object.keys(this.props.markers).forEach(function (marker) {
-        markers.push(_this2.props.markers[marker]);
+        markers.push(_this3.props.markers[marker]);
       });
 
       var latestAddedMarker = markers.reduce(function (a, b) {
@@ -12168,28 +12175,25 @@ var GoogleMap = function (_Component) {
 
       this.setState({
         currentCenter: {
-          lat: latestAddedMarker.place.geometry.location.lat,
-          lng: latestAddedMarker.place.geometry.location.lng
+          lat: latestAddedMarker.latLng.lat,
+          lng: latestAddedMarker.latLng.lng
         }
       });
     }
   }, {
     key: 'renderMarkers',
     value: function renderMarkers() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this.props.markers) {
-        //function being called by no markers rendered until state change in App.jsx
-        console.log('renderMarkers() called');
-        console.log('my props', this.props);
         var markers = this.props.markers;
         return Object.keys(markers).map(function (marker) {
           return _react2.default.createElement(_Marker2.default, {
             key: marker,
-            google: _this3.props.google,
+            google: _this4.props.google,
             marker: markers[marker],
-            map: _this3.map,
-            mapCenter: _this3.state.currentCenter
+            map: _this4.map,
+            mapCenter: _this4.state.currentCenter
           });
         });
       }
@@ -12207,12 +12211,6 @@ var GoogleMap = function (_Component) {
 
   return GoogleMap;
 }(_react.Component);
-
-// GoogleMap.propTypes = {
-//   google: PropTypes.object,
-//   zoom: PropTypes.number,
-//   initialCenter: PropTypes.object,
-// };
 
 GoogleMap.defaultProps = {
   zoom: 13,

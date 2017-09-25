@@ -1212,6 +1212,7 @@ var reducers = function reducers() {
           url: action.url,
           title: action.title,
           place: action.place,
+          latLng: action.latLng,
           date: action.date
         }))
       });

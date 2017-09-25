@@ -15,6 +15,7 @@ const reducers = (state = initialState, action) => {
           url: action.url,
           title: action.title,
           place: action.place,
+          latLng: action.latLng,
           date: action.date,
         },
       },

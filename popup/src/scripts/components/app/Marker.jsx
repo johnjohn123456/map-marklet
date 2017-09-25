@@ -18,8 +18,10 @@ class Marker extends Component {
     const google = this.props.google;
     const map = this.props.map;
     const markerInfo = this.props.marker;
+    console.log(markerInfo)
     const marker = new google.maps.Marker({
-      position: markerInfo.place.geometry.location,
+      // position: markerInfo.place.geometry.location,
+      position: markerInfo.latLng,
       map: map,
       title: markerInfo.title,
     });
@@ -27,7 +29,7 @@ class Marker extends Component {
       content: markerInfo.title,
     });
     marker.addListener('click', () => {
-      infowindow.open(map, marker)
+      infowindow.open(map, marker);
     });
   }
 

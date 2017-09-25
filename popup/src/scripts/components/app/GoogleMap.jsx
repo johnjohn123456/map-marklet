@@ -64,6 +64,9 @@ class GoogleMap extends Component {
         zoom: zoom,
       };
       this.map = new maps.Map(node, mapConfig);
+      this.map.addListener('click', (e) => {
+        this.props.placeMarker(e.latLng);
+      });
     }
   }
 
@@ -82,17 +85,14 @@ class GoogleMap extends Component {
 
     this.setState({
       currentCenter: {
-        lat: latestAddedMarker.place.geometry.location.lat,
-        lng: latestAddedMarker.place.geometry.location.lng,
+        lat: latestAddedMarker.latLng.lat,
+        lng: latestAddedMarker.latLng.lng,
       },
     });
   }
 
   renderMarkers () {
     if (this.props.markers) {
-      //function being called by no markers rendered until state change in App.jsx
-      console.log('renderMarkers() called')
-      console.log('my props', this.props);
       const markers = this.props.markers;
       return Object.keys(markers).map(marker => {
         return <Marker
@@ -114,12 +114,6 @@ class GoogleMap extends Component {
     );
   }
 }
-
-// GoogleMap.propTypes = {
-//   google: PropTypes.object,
-//   zoom: PropTypes.number,
-//   initialCenter: PropTypes.object,
-// };
 
 GoogleMap.defaultProps = {
   zoom: 13,
