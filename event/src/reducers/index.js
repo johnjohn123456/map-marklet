@@ -13,6 +13,7 @@ const reducers = (state = initialState, action) => {
         ...state.markers,
         [uuid()]: {
           url: action.url,
+          title: action.title,
           place: action.place,
           date: action.date,
         },

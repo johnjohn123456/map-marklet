@@ -1210,6 +1210,7 @@ var reducers = function reducers() {
       return _extends({}, state, {
         markers: _extends({}, state.markers, _defineProperty({}, (0, _v2.default)(), {
           url: action.url,
+          title: action.title,
           place: action.place,
           date: action.date
         }))

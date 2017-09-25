@@ -27,12 +27,17 @@ class App extends Component {
 
     this.state = {};
 
+    // setTimeout(() => {
+    //   console.log(this);
+    //   this.setState({foo:new Date()})
+    // }, 500);
   }
 
   addMarker = () => {
     chrome.tabs.getSelected(null, tab => {
       this.props.addMarker({
         url: tab.url,
+        title: tab.title,
         place: this.state.place,
         date: this.state.date,
       });
@@ -45,6 +50,7 @@ class App extends Component {
     const input = ReactDOM.findDOMNode(findCenterInputRef);
     const autocomplete = new google.maps.places.Autocomplete(input);
     autocomplete.addListener('place_changed', () => {
+      console.log('state changed in App.jsx')
       let place = autocomplete.getPlace();
       const date = new Date();
       this.setState({
@@ -58,11 +64,22 @@ class App extends Component {
     // console.log(this.props.markers)
   }
 
+  componentWillReceiveProps (nextProps) {
+    //force googlemaps to update when component recieves props from redux store
+    if (nextProps.markers !== this.props.markers) {
+      setTimeout(() => {
+        this.setState({foo:new Date()});
+      }, 500);
+    }
+  }
+
   render () {
 
     if (!this.props.loaded) {
       return <div>Loading...</div>;
     }
+
+    console.log('MARKERS', this.props.marker);
 
     return (
       <div style={AppStyle}>
@@ -83,6 +100,7 @@ const mapDispatchToProps = (dispatch) => ({
   addMarker: (marker) => dispatch({
     type: 'ADD_URL',
     url: marker.url,
+    title: marker.title,
     place: marker.place,
     date: marker.date,
   }),

@@ -6,6 +6,10 @@ class Marker extends Component {
     super(props);
   }
 
+  componentDidMount () {
+    this.renderMarker();
+  }
+
   componentDidUpdate () {
     this.renderMarker();
   }
@@ -13,12 +17,17 @@ class Marker extends Component {
   renderMarker () {
     const google = this.props.google;
     const map = this.props.map;
-    const markerInfo = this.props.marker
-    // console.log(this.props.marker.place.geometry.location)
+    const markerInfo = this.props.marker;
     const marker = new google.maps.Marker({
       position: markerInfo.place.geometry.location,
       map: map,
-      title: 'foobar',
+      title: markerInfo.title,
+    });
+    const infowindow = new google.maps.InfoWindow({
+      content: markerInfo.title,
+    });
+    marker.addListener('click', () => {
+      infowindow.open(map, marker)
     });
   }
 

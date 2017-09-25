@@ -90,6 +90,9 @@ class GoogleMap extends Component {
 
   renderMarkers () {
     if (this.props.markers) {
+      //function being called by no markers rendered until state change in App.jsx
+      console.log('renderMarkers() called')
+      console.log('my props', this.props);
       const markers = this.props.markers;
       return Object.keys(markers).map(marker => {
         return <Marker
@@ -112,17 +115,17 @@ class GoogleMap extends Component {
   }
 }
 
-GoogleMap.propTypes = {
-  google: PropTypes.object,
-  zoom: PropTypes.number,
-  initialCenter: PropTypes.object,
-};
+// GoogleMap.propTypes = {
+//   google: PropTypes.object,
+//   zoom: PropTypes.number,
+//   initialCenter: PropTypes.object,
+// };
 
 GoogleMap.defaultProps = {
   zoom: 13,
   initialCenter: {
-    lat: 1.351128,
-    lng: 103.872199,
+    lat: 51.5073509,
+    lng: -0.12775829999998223,
   },
 };
 

@@ -7095,6 +7095,11 @@ var Marker = function (_Component) {
   }
 
   _createClass(Marker, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.renderMarker();
+    }
+  }, {
     key: 'componentDidUpdate',
     value: function componentDidUpdate() {
       this.renderMarker();
@@ -7105,11 +7110,16 @@ var Marker = function (_Component) {
       var google = this.props.google;
       var map = this.props.map;
       var markerInfo = this.props.marker;
-      // console.log(this.props.marker.place.geometry.location)
       var marker = new google.maps.Marker({
         position: markerInfo.place.geometry.location,
         map: map,
-        title: 'foobar'
+        title: markerInfo.title
+      });
+      var infowindow = new google.maps.InfoWindow({
+        content: markerInfo.title
+      });
+      marker.addListener('click', function () {
+        infowindow.open(map, marker);
       });
     }
   }, {
@@ -11918,6 +11928,7 @@ var App = function (_Component) {
       chrome.tabs.getSelected(null, function (tab) {
         _this.props.addMarker({
           url: tab.url,
+          title: tab.title,
           place: _this.state.place,
           date: _this.state.date
         });
@@ -11930,6 +11941,7 @@ var App = function (_Component) {
       var input = _reactDom2.default.findDOMNode(findCenterInputRef);
       var autocomplete = new google.maps.places.Autocomplete(input);
       autocomplete.addListener('place_changed', function () {
+        console.log('state changed in App.jsx');
         var place = autocomplete.getPlace();
         var date = new Date();
         _this.setState({
@@ -11941,6 +11953,10 @@ var App = function (_Component) {
 
     _this.state = {};
 
+    // setTimeout(() => {
+    //   console.log(this);
+    //   this.setState({foo:new Date()})
+    // }, 500);
     return _this;
   }
 
@@ -11948,6 +11964,18 @@ var App = function (_Component) {
     key: 'componentDidUpdate',
     value: function componentDidUpdate(prevProps, prevState) {
       // console.log(this.props.markers)
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      var _this2 = this;
+
+      //force googlemaps to update when component recieves props from redux store
+      if (nextProps.markers !== this.props.markers) {
+        setTimeout(function () {
+          _this2.setState({ foo: new Date() });
+        }, 500);
+      }
     }
   }, {
     key: 'render',
@@ -11960,6 +11988,8 @@ var App = function (_Component) {
           'Loading...'
         );
       }
+
+      console.log('MARKERS', this.props.marker);
 
       return _react2.default.createElement(
         'div',
@@ -11991,6 +12021,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
       return dispatch({
         type: 'ADD_URL',
         url: marker.url,
+        title: marker.title,
         place: marker.place,
         date: marker.date
       });
@@ -12148,6 +12179,9 @@ var GoogleMap = function (_Component) {
       var _this3 = this;
 
       if (this.props.markers) {
+        //function being called by no markers rendered until state change in App.jsx
+        console.log('renderMarkers() called');
+        console.log('my props', this.props);
         var markers = this.props.markers;
         return Object.keys(markers).map(function (marker) {
           return _react2.default.createElement(_Marker2.default, {
@@ -12174,17 +12208,17 @@ var GoogleMap = function (_Component) {
   return GoogleMap;
 }(_react.Component);
 
-GoogleMap.propTypes = {
-  google: _propTypes2.default.object,
-  zoom: _propTypes2.default.number,
-  initialCenter: _propTypes2.default.object
-};
+// GoogleMap.propTypes = {
+//   google: PropTypes.object,
+//   zoom: PropTypes.number,
+//   initialCenter: PropTypes.object,
+// };
 
 GoogleMap.defaultProps = {
   zoom: 13,
   initialCenter: {
-    lat: 1.351128,
-    lng: 103.872199
+    lat: 51.5073509,
+    lng: -0.12775829999998223
   }
 };
 
