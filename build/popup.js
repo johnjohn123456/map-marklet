@@ -11943,8 +11943,8 @@ var App = function (_Component) {
       var autocomplete = new google.maps.places.Autocomplete(input);
       autocomplete.addListener('place_changed', function () {
         var place = autocomplete.getPlace();
+        console.log(place.geometry.location.lat());
         var date = new Date();
-        console.log('place-changed');
         _this.setState({
           place: place,
           latLng: place.geometry.location,
@@ -11954,6 +11954,7 @@ var App = function (_Component) {
     };
 
     _this.placeMarker = function (latLng, date) {
+      console.log('latlng', latLng);
       _this.setState({
         place: null,
         latLng: latLng,
@@ -11993,10 +11994,18 @@ var App = function (_Component) {
         );
       }
 
+      console.log('from State', this.state.latLng);
+
       return _react2.default.createElement(
         'div',
         { style: AppStyle },
-        _react2.default.createElement(_GoogleMap2.default, { google: this.props.google, markers: this.props.markers, placeMarker: this.placeMarker }),
+        _react2.default.createElement(_GoogleMap2.default, { ref: 'map',
+          google: this.props.google,
+          markers: this.props.markers,
+          placeMarker: this.placeMarker,
+          place: this.state.place,
+          latLng: this.state.latLng
+        }),
         _react2.default.createElement('br', null),
         _react2.default.createElement('input', { id: 'findCenter', style: inputStyle, type: 'text', ref: 'findCenter', onKeyPress: this.findCenter, placeholder: 'find location' }),
         _react2.default.createElement(
@@ -12127,6 +12136,14 @@ var GoogleMap = function (_Component) {
       }
     }
   }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+
+      if (this.props.latLng !== nextProps.latLng) {
+        window.map.panTo(nextProps.latLng);
+      }
+    }
+  }, {
     key: 'loadMap',
     value: function loadMap() {
       var _this2 = this;
@@ -12151,11 +12168,11 @@ var GoogleMap = function (_Component) {
           center: center,
           zoom: zoom
         };
-        this.map = new maps.Map(node, mapConfig);
+        window.map = new maps.Map(node, mapConfig);
 
         //add listener for clicks on map to place markers
         var tempMarker = null;
-        this.map.addListener('click', function (e) {
+        window.map.addListener('click', function (e) {
           if (tempMarker && tempMarker.setMap) {
             //remove the prev tempMarker before a new one is set
             tempMarker.setMap(null);
@@ -12165,8 +12182,8 @@ var GoogleMap = function (_Component) {
             position: e.latLng
           });
           tempMarker = marker;
-          _this2.map.panTo(e.latLng);
-          marker.setMap(_this2.map);
+          // window.map.panTo(e.latLng);
+          marker.setMap(window.map);
           _this2.props.placeMarker(e.latLng, date);
         });
       }
@@ -12207,7 +12224,7 @@ var GoogleMap = function (_Component) {
             key: marker,
             google: _this4.props.google,
             marker: markers[marker],
-            map: _this4.map,
+            map: window.map,
             mapCenter: _this4.state.currentCenter
           });
         });

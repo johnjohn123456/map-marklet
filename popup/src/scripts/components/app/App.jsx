@@ -50,7 +50,6 @@ class App extends Component {
     autocomplete.addListener('place_changed', () => {
       let place = autocomplete.getPlace();
       const date = new Date();
-      console.log('place-changed')
       this.setState({
         place: place,
         latLng: place.geometry.location,
@@ -82,9 +81,18 @@ class App extends Component {
       return <div>Loading...</div>;
     }
 
+
     return (
       <div style={AppStyle}>
-        <GoogleMap google={this.props.google} markers={this.props.markers} placeMarker={this.placeMarker}/>
+
+        <GoogleMap ref="map"
+          google={this.props.google}
+          markers={this.props.markers}
+          placeMarker={this.placeMarker}
+          place={this.state.place}
+          latLng={this.state.latLng}
+        />
+
         <br />
         <input id="findCenter" style={inputStyle} type="text" ref="findCenter" onKeyPress={this.findCenter} placeholder="find location"/>
         <button style={buttonStyle} onClick={this.addMarker}>Add Marker</button>

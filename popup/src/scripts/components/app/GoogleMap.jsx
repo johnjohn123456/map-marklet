@@ -46,6 +46,13 @@ class GoogleMap extends Component {
     }
   }
 
+  componentWillReceiveProps (nextProps) {
+
+    if (this.props.latLng !== nextProps.latLng) {
+      window.map.panTo(nextProps.latLng)
+    }
+  }
+
   loadMap () {
     if (this.props && this.props.google) {
       //if the google api has loaded into props
@@ -63,11 +70,11 @@ class GoogleMap extends Component {
         center: center,
         zoom: zoom,
       };
-      this.map = new maps.Map(node, mapConfig);
+      window.map = new maps.Map(node, mapConfig);
 
       //add listener for clicks on map to place markers
       let tempMarker = null;
-      this.map.addListener('click', (e) => {
+      window.map.addListener('click', (e) => {
         if (tempMarker && tempMarker.setMap) {
           //remove the prev tempMarker before a new one is set
           tempMarker.setMap(null);
@@ -77,8 +84,8 @@ class GoogleMap extends Component {
           position: e.latLng,
         });
         tempMarker = marker;
-        this.map.panTo(e.latLng);
-        marker.setMap(this.map);
+        // window.map.panTo(e.latLng);
+        marker.setMap(window.map);
         this.props.placeMarker(e.latLng, date);
       });
     }
@@ -113,7 +120,7 @@ class GoogleMap extends Component {
           key={marker}
           google={this.props.google}
           marker={markers[marker]}
-          map={this.map}
+          map={window.map}
           mapCenter={this.state.currentCenter}
         />;
       });
