@@ -58,16 +58,6 @@ class App extends Component {
     // console.log(this.props.markers)
   }
 
-  // renderMarkers () {
-  //   if (this.props.markers) {
-  //     const markers = this.props.markers;
-  //     return Object.keys(markers).map(marker => {
-  //       console.log('foo')
-  //       return <Marker />;
-  //     });
-  //   }
-  // }
-
   render () {
 
     if (!this.props.loaded) {
@@ -80,8 +70,6 @@ class App extends Component {
         <br />
         <input id="findCenter" style={inputStyle} type="text" ref="findCenter" onKeyPress={this.findCenter} placeholder="find location"/>
         <button style={buttonStyle} onClick={this.addMarker}>Add Marker</button>
-        {/* {this.renderMarkers()}
-        <Marker /> */}
       </div>
     );
   }

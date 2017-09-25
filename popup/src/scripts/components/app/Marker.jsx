@@ -6,14 +6,24 @@ class Marker extends Component {
     super(props);
   }
 
-  componentDidMount () {
-    console.log(this.props.marker)
+  componentDidUpdate () {
+    this.renderMarker();
+  }
+
+  renderMarker () {
+    const google = this.props.google;
+    const map = this.props.map;
+    const markerInfo = this.props.marker
+    // console.log(this.props.marker.place.geometry.location)
+    const marker = new google.maps.Marker({
+      position: markerInfo.place.geometry.location,
+      map: map,
+      title: 'foobar',
+    });
   }
 
   render () {
-    return (
-      <div>Foobar</div>
-    );
+    return null;
   }
 }
 

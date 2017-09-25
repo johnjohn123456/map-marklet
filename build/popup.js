@@ -7095,18 +7095,27 @@ var Marker = function (_Component) {
   }
 
   _createClass(Marker, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      console.log(this.props.marker);
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate() {
+      this.renderMarker();
+    }
+  }, {
+    key: 'renderMarker',
+    value: function renderMarker() {
+      var google = this.props.google;
+      var map = this.props.map;
+      var markerInfo = this.props.marker;
+      // console.log(this.props.marker.place.geometry.location)
+      var marker = new google.maps.Marker({
+        position: markerInfo.place.geometry.location,
+        map: map,
+        title: 'foobar'
+      });
     }
   }, {
     key: 'render',
     value: function render() {
-      return _react2.default.createElement(
-        'div',
-        null,
-        'Foobar'
-      );
+      return null;
     }
   }]);
 
@@ -11937,20 +11946,9 @@ var App = function (_Component) {
 
   _createClass(App, [{
     key: 'componentDidUpdate',
-    value: function componentDidUpdate(prevProps, prevState) {}
-    // console.log(this.props.markers)
-
-
-    // renderMarkers () {
-    //   if (this.props.markers) {
-    //     const markers = this.props.markers;
-    //     return Object.keys(markers).map(marker => {
-    //       console.log('foo')
-    //       return <Marker />;
-    //     });
-    //   }
-    // }
-
+    value: function componentDidUpdate(prevProps, prevState) {
+      // console.log(this.props.markers)
+    }
   }, {
     key: 'render',
     value: function render() {
@@ -12147,10 +12145,18 @@ var GoogleMap = function (_Component) {
   }, {
     key: 'renderMarkers',
     value: function renderMarkers() {
+      var _this3 = this;
+
       if (this.props.markers) {
         var markers = this.props.markers;
         return Object.keys(markers).map(function (marker) {
-          return _react2.default.createElement(_Marker2.default, { key: marker, marker: markers[marker] });
+          return _react2.default.createElement(_Marker2.default, {
+            key: marker,
+            google: _this3.props.google,
+            marker: markers[marker],
+            map: _this3.map,
+            mapCenter: _this3.state.currentCenter
+          });
         });
       }
     }

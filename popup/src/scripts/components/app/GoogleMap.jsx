@@ -92,7 +92,13 @@ class GoogleMap extends Component {
     if (this.props.markers) {
       const markers = this.props.markers;
       return Object.keys(markers).map(marker => {
-        return <Marker key={marker} marker={markers[marker]}/>;
+        return <Marker
+          key={marker}
+          google={this.props.google}
+          marker={markers[marker]}
+          map={this.map}
+          mapCenter={this.state.currentCenter}
+        />;
       });
     }
   }
