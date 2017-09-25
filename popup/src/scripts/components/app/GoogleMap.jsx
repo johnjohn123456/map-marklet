@@ -26,7 +26,7 @@ class GoogleMap extends Component {
 
 
   componentDidMount () {
-    const markers = Object.keys(this.props.markers)
+    const markers = Object.keys(this.props.markers);
     if (markers.length > 0) {
       this.getLatestMarker();
     }
@@ -66,21 +66,22 @@ class GoogleMap extends Component {
       this.map = new maps.Map(node, mapConfig);
 
       //add listener for clicks on map to place markers
+      let tempMarker = null;
       this.map.addListener('click', (e) => {
+        if (tempMarker && tempMarker.setMap) {
+          //remove the prev tempMarker before a new one is set
+          tempMarker.setMap(null);
+        }
         const date = new Date();
-        this.placeTempMarker(e.latLng, this.map);
+        const marker = new maps.Marker({
+          position: e.latLng,
+        });
+        tempMarker = marker;
+        this.map.panTo(e.latLng);
+        marker.setMap(this.map);
         this.props.placeMarker(e.latLng, date);
       });
     }
-  }
-
-  placeTempMarker (latLng, map) {
-    const google = this.props.google;
-    const marker = new google.maps.Marker({
-      position: latLng,
-      map: map,
-    });
-    map.panTo(latLng);
   }
 
   getLatestMarker () {

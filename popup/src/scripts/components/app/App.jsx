@@ -50,6 +50,7 @@ class App extends Component {
     autocomplete.addListener('place_changed', () => {
       let place = autocomplete.getPlace();
       const date = new Date();
+      console.log('place-changed')
       this.setState({
         place: place,
         latLng: place.geometry.location,
@@ -71,7 +72,7 @@ class App extends Component {
     if (nextProps.markers !== this.props.markers) {
       setTimeout(() => {
         this.setState({foo:new Date()});
-      }, 100);
+      }, 200);
     }
   }
 

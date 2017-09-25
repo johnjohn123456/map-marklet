@@ -11944,6 +11944,7 @@ var App = function (_Component) {
       autocomplete.addListener('place_changed', function () {
         var place = autocomplete.getPlace();
         var date = new Date();
+        console.log('place-changed');
         _this.setState({
           place: place,
           latLng: place.geometry.location,
@@ -11977,7 +11978,7 @@ var App = function (_Component) {
       if (nextProps.markers !== this.props.markers) {
         setTimeout(function () {
           _this2.setState({ foo: new Date() });
-        }, 100);
+        }, 200);
       }
     }
   }, {
@@ -12153,22 +12154,22 @@ var GoogleMap = function (_Component) {
         this.map = new maps.Map(node, mapConfig);
 
         //add listener for clicks on map to place markers
+        var tempMarker = null;
         this.map.addListener('click', function (e) {
+          if (tempMarker && tempMarker.setMap) {
+            //remove the prev tempMarker before a new one is set
+            tempMarker.setMap(null);
+          }
           var date = new Date();
-          _this2.placeTempMarker(e.latLng, _this2.map);
+          var marker = new maps.Marker({
+            position: e.latLng
+          });
+          tempMarker = marker;
+          _this2.map.panTo(e.latLng);
+          marker.setMap(_this2.map);
           _this2.props.placeMarker(e.latLng, date);
         });
       }
-    }
-  }, {
-    key: 'placeTempMarker',
-    value: function placeTempMarker(latLng, map) {
-      var google = this.props.google;
-      var marker = new google.maps.Marker({
-        position: latLng,
-        map: map
-      });
-      map.panTo(latLng);
     }
   }, {
     key: 'getLatestMarker',
