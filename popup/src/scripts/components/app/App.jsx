@@ -107,7 +107,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   addMarker: (marker) => dispatch({
-    type: 'ADD_MARKER',
+    type: 'ADD_URL',
     url: marker.url,
     title: marker.title,
     place: marker.place,
