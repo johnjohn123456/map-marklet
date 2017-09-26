@@ -38,9 +38,11 @@ class GoogleMap extends Component {
     if (prevProps.google !== this.props.google) {
       this.loadMap();
     }
+    //check it a new marker has been added to redux store and passed down
     if (prevProps.markers !== this.props.markers) {
       this.getLatestMarker();
     }
+    //check if state change when placing temp marker
     if (prevState !== this.state) {
       this.loadMap();
     }
