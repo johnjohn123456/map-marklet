@@ -6,6 +6,7 @@ import {GoogleApiWrapper} from 'google-maps-react';
 
 import GoogleMap from './GoogleMap';
 import Marker from './Marker';
+import './styles.scss'
 
 const AppStyle = {
   width: '600px',

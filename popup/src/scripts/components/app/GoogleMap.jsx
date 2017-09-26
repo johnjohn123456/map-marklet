@@ -7,6 +7,8 @@ import GoogleMapStyles from './styles';
 
 import Marker from './Marker';
 
+import './styles';
+
 const mapStyle = {
   margin: '5px',
   width: '550px',

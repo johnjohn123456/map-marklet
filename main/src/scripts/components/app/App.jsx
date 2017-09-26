@@ -5,8 +5,9 @@ import {connect} from 'react-redux';
 import {GoogleApiWrapper} from 'google-maps-react';
 
 import Marker from './Marker';
+import GoogleMapStyle from './styles';
 
-import './style.scss';
+import './styles.scss';
 
 
 const mapStyle = {
@@ -59,6 +60,7 @@ class App extends Component {
       const mapConfig = {
         center: center,
         zoom: zoom,
+        styles: GoogleMapStyle,
       };
       this.map = new maps.Map(node, mapConfig);
     }
