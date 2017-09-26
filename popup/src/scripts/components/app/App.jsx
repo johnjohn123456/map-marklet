@@ -76,6 +76,17 @@ class App extends Component {
     }
   }
 
+  deleteMarker = (marker) => {
+    marker.center = {
+      lat: marker.position.lat(),
+      lng: marker.position.lng(),
+    };
+
+    marker.latLng = JSON.stringify(marker.center);
+    this.props.deleteMarker(marker);
+
+  }
+
   render () {
 
     if (!this.props.loaded) {
@@ -90,6 +101,7 @@ class App extends Component {
           google={this.props.google}
           markers={this.props.markers}
           placeMarker={this.placeMarker}
+          deleteMarker={this.deleteMarker}
           place={this.state.place}
           latLng={this.state.latLng}
         />
@@ -108,12 +120,17 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   addMarker: (marker) => dispatch({
-    type: 'ADD_URL',
+    type: 'ADD_MARKER',
     url: marker.url,
     title: marker.title,
     place: marker.place,
     latLng: marker.latLng,
     date: marker.date,
+  }),
+
+  deleteMarker: (marker) => dispatch({
+    type: 'DELETE_MARKER',
+    latLng: marker.latLng,
   }),
 });
 

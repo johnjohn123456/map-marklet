@@ -1,3 +1,4 @@
+//popup
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
@@ -49,9 +50,14 @@ class GoogleMap extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-
+    //ensures that it is the place change event in autocomplete re-setting latLng in App.jsx
+    //...that causes invocation of panTo here
     if (this.props.latLng !== nextProps.latLng) {
       this.map.panTo(nextProps.latLng);
+    }
+    //when DELETE_MARKER is dispatched, re-load the map
+    if (this.props.markers !== nextProps.markers) {
+      this.loadMap();
     }
   }
 
@@ -123,7 +129,8 @@ class GoogleMap extends Component {
           google={this.props.google}
           marker={markers[marker]}
           map={this.map}
-          mapCenter={this.state.currentCenter}
+          // mapCenter={this.state.currentCenter}
+          deleteMarker={this.props.deleteMarker}
         />;
       });
     }

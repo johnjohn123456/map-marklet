@@ -27,7 +27,7 @@ class Marker extends Component {
       content: markerInfo.title,
     });
     marker.addListener('click', () => {
-      infowindow.open(map, marker);
+      this.props.deleteMarker(marker);
     });
   }
 

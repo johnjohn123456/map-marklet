@@ -1206,15 +1206,24 @@ var reducers = function reducers() {
   var action = arguments[1];
 
   switch (action.type) {
-    case 'ADD_URL':
+    case 'ADD_MARKER':
       return _extends({}, state, {
-        markers: _extends({}, state.markers, _defineProperty({}, (0, _v2.default)(), {
+        markers: _extends({}, state.markers, _defineProperty({}, JSON.stringify(action.latLng), {
           url: action.url,
           title: action.title,
           place: action.place,
           latLng: action.latLng,
           date: action.date
         }))
+      });
+    case 'DELETE_MARKER':
+      return _extends({}, state, {
+        markers: Object.keys(state.markers).filter(function (latLng) {
+          return latLng !== action.latLng;
+        }).reduce(function (stateMarkers, latLng) {
+          stateMarkers[latLng] = state.markers[latLng];
+          return stateMarkers;
+        }, {})
       });
     default:
       return state;

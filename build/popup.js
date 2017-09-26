@@ -7107,6 +7107,8 @@ var Marker = function (_Component) {
   }, {
     key: 'renderMarker',
     value: function renderMarker() {
+      var _this2 = this;
+
       var google = this.props.google;
       var map = this.props.map;
       var markerInfo = this.props.marker;
@@ -7119,7 +7121,7 @@ var Marker = function (_Component) {
         content: markerInfo.title
       });
       marker.addListener('click', function () {
-        infowindow.open(map, marker);
+        _this2.props.deleteMarker(marker);
       });
     }
   }, {
@@ -11961,6 +11963,16 @@ var App = function (_Component) {
       });
     };
 
+    _this.deleteMarker = function (marker) {
+      marker.center = {
+        lat: marker.position.lat(),
+        lng: marker.position.lng()
+      };
+
+      marker.latLng = JSON.stringify(marker.center);
+      _this.props.deleteMarker(marker);
+    };
+
     _this.state = {};
 
     return _this;
@@ -12000,6 +12012,7 @@ var App = function (_Component) {
           google: this.props.google,
           markers: this.props.markers,
           placeMarker: this.placeMarker,
+          deleteMarker: this.deleteMarker,
           place: this.state.place,
           latLng: this.state.latLng
         }),
@@ -12027,12 +12040,19 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
     addMarker: function addMarker(marker) {
       return dispatch({
-        type: 'ADD_URL',
+        type: 'ADD_MARKER',
         url: marker.url,
         title: marker.title,
         place: marker.place,
         latLng: marker.latLng,
         date: marker.date
+      });
+    },
+
+    deleteMarker: function deleteMarker(marker) {
+      return dispatch({
+        type: 'DELETE_MARKER',
+        latLng: marker.latLng
       });
     }
   };
@@ -12079,7 +12099,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //popup
+
 
 var mapStyle = {
   margin: '5px',
@@ -12137,9 +12158,14 @@ var GoogleMap = function (_Component) {
   }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
-
+      //ensures that it is the place change event in autocomplete re-setting latLng in App.jsx
+      //...that causes invocation of panTo here
       if (this.props.latLng !== nextProps.latLng) {
         this.map.panTo(nextProps.latLng);
+      }
+      //when DELETE_MARKER is dispatched, re-load the map
+      if (this.props.markers !== nextProps.markers) {
+        this.loadMap();
       }
     }
   }, {
@@ -12223,8 +12249,9 @@ var GoogleMap = function (_Component) {
             key: marker,
             google: _this4.props.google,
             marker: markers[marker],
-            map: _this4.map,
-            mapCenter: _this4.state.currentCenter
+            map: _this4.map
+            // mapCenter={this.state.currentCenter}
+            , deleteMarker: _this4.props.deleteMarker
           });
         });
       }

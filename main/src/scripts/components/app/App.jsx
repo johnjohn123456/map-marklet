@@ -29,7 +29,7 @@ class App extends Component {
     if (prevProps.google !== this.props.google) {
       this.loadMap();
     }
-    console.log(this.props)
+    console.log('this.props of Main app.jsx',this.props)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -71,6 +71,7 @@ class App extends Component {
           google={this.props.google}
           marker={markers[marker]}
           map={this.map}
+          deleteMarker = {this.props.deletemarker}
           mapCenter={this.state.currentCenter}
         />;
       });

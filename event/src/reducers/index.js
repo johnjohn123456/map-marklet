@@ -6,12 +6,12 @@ const initialState = {
 
 const reducers = (state = initialState, action) => {
   switch (action.type) {
-  case 'ADD_URL':
+  case 'ADD_MARKER':
     return {
       ...state,
       markers: {
         ...state.markers,
-        [uuid()]: {
+        [JSON.stringify(action.latLng)]: {
           url: action.url,
           title: action.title,
           place: action.place,
@@ -19,6 +19,18 @@ const reducers = (state = initialState, action) => {
           date: action.date,
         },
       },
+    };
+  case 'DELETE_MARKER':
+    return {
+      ...state,
+      markers: Object.keys(state.markers)
+        .filter(latLng => {
+          return latLng !== action.latLng;
+        })
+        .reduce((stateMarkers, latLng) => {
+          stateMarkers[latLng] = state.markers[latLng];
+          return stateMarkers;
+        }, {}),
     };
   default:
     return state;
