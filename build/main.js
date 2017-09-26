@@ -12012,8 +12012,7 @@ var Marker = function (_Component) {
       });
 
       //content window
-      console.log(markerInfo.desc);
-      var contentString = '<h2>' + markerInfo.title + '</h2>' + ('<div>' + markerInfo.desc + '</div>');
+      var contentString = '<h2><a href="' + markerInfo.url + '" target="_blank">' + markerInfo.title + '</a></h2>' + ('<div>' + markerInfo.desc + '</div>');
       var infowindow = new google.maps.InfoWindow({
         content: contentString
       });
