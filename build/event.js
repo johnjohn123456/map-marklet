@@ -1206,7 +1206,7 @@ var reducers = function reducers() {
   var action = arguments[1];
 
   switch (action.type) {
-    case 'ADD_URL':
+    case 'ADD_MARKER':
       return _extends({}, state, {
         markers: _extends({}, state.markers, _defineProperty({}, (0, _v2.default)(), {
           url: action.url,

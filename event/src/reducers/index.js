@@ -6,7 +6,7 @@ const initialState = {
 
 const reducers = (state = initialState, action) => {
   switch (action.type) {
-  case 'ADD_URL':
+  case 'ADD_MARKER':
     return {
       ...state,
       markers: {
