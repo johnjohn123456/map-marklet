@@ -6,6 +6,9 @@ import {GoogleApiWrapper} from 'google-maps-react';
 
 import Marker from './Marker';
 
+import './style.scss';
+
+
 const mapStyle = {
   width: '100vw',
   height: '100vh',
@@ -29,7 +32,6 @@ class App extends Component {
     if (prevProps.google !== this.props.google) {
       this.loadMap();
     }
-    console.log('this.props of Main app.jsx',this.props)
   }
 
   componentWillReceiveProps (nextProps) {

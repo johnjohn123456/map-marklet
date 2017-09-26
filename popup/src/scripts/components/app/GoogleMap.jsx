@@ -3,6 +3,8 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
+import GoogleMapStyles from './styles';
+
 import Marker from './Marker';
 
 const mapStyle = {
@@ -13,6 +15,9 @@ const mapStyle = {
 };
 
 class GoogleMap extends Component {
+
+  tempMarker = null;
+
   constructor (props) {
     super(props);
 
@@ -50,10 +55,11 @@ class GoogleMap extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    //ensures that it is the place change event in autocomplete re-setting latLng in App.jsx
-    //...that causes invocation of panTo here
+    //conditional to ensure that only the place change event in autocomplete is re-setting latLng in App.jsx
+    //otherwise props will change when temp marker is set via clicking
     if (this.props.latLng !== nextProps.latLng) {
       this.map.panTo(nextProps.latLng);
+      this.setTempMarker(nextProps.latLng);
     }
     //when DELETE_MARKER is dispatched, re-load the map
     if (this.props.markers !== nextProps.markers) {
@@ -61,11 +67,31 @@ class GoogleMap extends Component {
     }
   }
 
+  setTempMarker = (latLng) => {
+    //if the google api has loaded into props
+    const {google} = this.props;
+    const maps = google.maps;
+
+    if (this.tempMarker && this.tempMarker.setMap) {
+      //remove the prev this.tempMarker before a new one is set
+      this.tempMarker.setMap(null);
+    }
+    const date = new Date();
+    const marker = new maps.Marker({
+      position: latLng,
+    });
+    this.tempMarker = marker;
+    // this.map.panTo(e.latLng);
+    marker.setMap(this.map);
+    this.props.placeMarker(latLng, date);
+  }
+
   loadMap () {
     if (this.props && this.props.google) {
       //if the google api has loaded into props
       const {google} = this.props;
       const maps = google.maps;
+
       //reference to GoogleMap's div node
       const mapRef = this.refs.map;
       const node = ReactDOM.findDOMNode(mapRef);
@@ -77,24 +103,13 @@ class GoogleMap extends Component {
       const mapConfig = {
         center: center,
         zoom: zoom,
+        styles: GoogleMapStyles,
       };
       this.map = new maps.Map(node, mapConfig);
 
       //add listener for clicks on map to place markers
-      let tempMarker = null;
       this.map.addListener('click', (e) => {
-        if (tempMarker && tempMarker.setMap) {
-          //remove the prev tempMarker before a new one is set
-          tempMarker.setMap(null);
-        }
-        const date = new Date();
-        const marker = new maps.Marker({
-          position: e.latLng,
-        });
-        tempMarker = marker;
-        // this.map.panTo(e.latLng);
-        marker.setMap(this.map);
-        this.props.placeMarker(e.latLng, date);
+        this.setTempMarker(e.latLng);
       });
     }
   }
@@ -129,7 +144,6 @@ class GoogleMap extends Component {
           google={this.props.google}
           marker={markers[marker]}
           map={this.map}
-          // mapCenter={this.state.currentCenter}
           deleteMarker={this.props.deleteMarker}
         />;
       });
