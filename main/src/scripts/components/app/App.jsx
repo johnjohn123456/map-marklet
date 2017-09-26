@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
 import {GoogleApiWrapper} from 'google-maps-react';
 
+import Marker from './Marker';
+
 const mapStyle = {
   width: '100vw',
   height: '100vh',
@@ -27,6 +29,7 @@ class App extends Component {
     if (prevProps.google !== this.props.google) {
       this.loadMap();
     }
+    console.log(this.props)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -60,7 +63,18 @@ class App extends Component {
   }
 
   renderMarkers () {
-    
+    if (this.props.markers) {
+      const markers = this.props.markers;
+      return Object.keys(markers).map(marker => {
+        return <Marker
+          key={marker}
+          google={this.props.google}
+          marker={markers[marker]}
+          map={this.map}
+          mapCenter={this.state.currentCenter}
+        />;
+      });
+    }
   }
 
   render () {
@@ -71,6 +85,7 @@ class App extends Component {
     return (
       <div ref="map" style={mapStyle}>
         MAIN PAGE xxx xxx xxx
+        {this.renderMarkers()}
       </div>
     );
   }
