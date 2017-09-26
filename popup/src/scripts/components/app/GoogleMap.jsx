@@ -49,7 +49,7 @@ class GoogleMap extends Component {
   componentWillReceiveProps (nextProps) {
 
     if (this.props.latLng !== nextProps.latLng) {
-      window.map.panTo(nextProps.latLng)
+      window.map.panTo(nextProps.latLng);
     }
   }
 

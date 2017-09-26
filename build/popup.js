@@ -11943,7 +11943,6 @@ var App = function (_Component) {
       var autocomplete = new google.maps.places.Autocomplete(input);
       autocomplete.addListener('place_changed', function () {
         var place = autocomplete.getPlace();
-        console.log(place.geometry.location.lat());
         var date = new Date();
         _this.setState({
           place: place,
@@ -11954,7 +11953,6 @@ var App = function (_Component) {
     };
 
     _this.placeMarker = function (latLng, date) {
-      console.log('latlng', latLng);
       _this.setState({
         place: null,
         latLng: latLng,
@@ -11993,8 +11991,6 @@ var App = function (_Component) {
           'Loading...'
         );
       }
-
-      console.log('from State', this.state.latLng);
 
       return _react2.default.createElement(
         'div',
