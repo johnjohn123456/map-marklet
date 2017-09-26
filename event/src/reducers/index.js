@@ -11,9 +11,11 @@ const reducers = (state = initialState, action) => {
       ...state,
       markers: {
         ...state.markers,
+        //ids are stringified version of latLng
         [JSON.stringify(action.latLng)]: {
           url: action.url,
           title: action.title,
+          desc: action.desc,
           place: action.place,
           latLng: action.latLng,
           date: action.date,

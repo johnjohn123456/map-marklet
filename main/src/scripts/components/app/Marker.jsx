@@ -1,6 +1,7 @@
 //main-Marker
 import React, {Component} from 'react';
 
+
 class Marker extends Component {
   constructor (props) {
     super(props);
@@ -23,8 +24,14 @@ class Marker extends Component {
       map: map,
       title: markerInfo.title,
     });
+
+    //content window
+    console.log(markerInfo.desc)
+    const contentString =
+      `<h2>${markerInfo.title}</h2>` +
+      `<div>${markerInfo.desc}</div>`      
     const infowindow = new google.maps.InfoWindow({
-      content: markerInfo.title,
+      content: contentString,
     });
     marker.addListener('click', () => {
       infowindow.open(map, marker);

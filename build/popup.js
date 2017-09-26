@@ -11919,6 +11919,10 @@ var inputStyle = {
   width: '450px'
 };
 
+var descStyle = {
+  width: '450px'
+};
+
 var App = function (_Component) {
   _inherits(App, _Component);
 
@@ -11927,16 +11931,37 @@ var App = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
+    _this.placeMarker = function (latLng, date) {
+      _this.setState({
+        place: null,
+        latLng: latLng,
+        date: date.toString()
+      });
+    };
+
     _this.addMarker = function () {
+      var desc = document.getElementById('desc').value;
       chrome.tabs.getSelected(null, function (tab) {
         _this.props.addMarker({
           url: tab.url,
           title: tab.title,
+          desc: desc,
           place: _this.state.place,
           latLng: _this.state.latLng,
           date: _this.state.date
         });
       });
+    };
+
+    _this.deleteMarker = function (marker) {
+      marker.center = {
+        lat: marker.position.lat(),
+        lng: marker.position.lng()
+      };
+
+      //set prop latLng as stringified version of the center obj
+      marker.latLng = JSON.stringify(marker.center);
+      _this.props.deleteMarker(marker);
     };
 
     _this.findCenter = function (e) {
@@ -11955,31 +11980,10 @@ var App = function (_Component) {
       });
     };
 
-    _this.placeMarker = function (latLng, date) {
-      _this.setState({
-        place: null,
-        latLng: latLng,
-        date: date.toString()
-      });
-    };
-
-    _this.deleteMarker = function (marker) {
-      marker.center = {
-        lat: marker.position.lat(),
-        lng: marker.position.lng()
-      };
-
-      marker.latLng = JSON.stringify(marker.center);
-      _this.props.deleteMarker(marker);
-    };
-
     _this.state = {};
 
     return _this;
   }
-
-  //when a place is selected in the autocomplete field, setState with place data.
-
 
   _createClass(App, [{
     key: 'componentWillReceiveProps',
@@ -11993,6 +11997,19 @@ var App = function (_Component) {
         }, 200);
       }
     }
+
+    //called when autocomplete field is filled in findCenter() is filled
+    //sets the state up for input to Redux store but does not send to store
+
+
+    //dispatches the action
+
+
+    //passed down and called from Marker child component
+
+
+    //when a place is selected in the autocomplete field, setState with place data.
+
   }, {
     key: 'render',
     value: function render() {
@@ -12017,7 +12034,16 @@ var App = function (_Component) {
           latLng: this.state.latLng
         }),
         _react2.default.createElement('br', null),
-        _react2.default.createElement('input', { id: 'findCenter', style: inputStyle, type: 'text', ref: 'findCenter', onKeyPress: this.findCenter, placeholder: 'find location' }),
+        _react2.default.createElement('input', { id: 'findCenter',
+          style: inputStyle,
+          type: 'text',
+          ref: 'findCenter',
+          onKeyPress: this.findCenter,
+          placeholder: 'find location'
+        }),
+        _react2.default.createElement('br', null),
+        _react2.default.createElement('textarea', { id: 'desc', style: descStyle, cols: '40', rows: '5' }),
+        _react2.default.createElement('br', null),
         _react2.default.createElement(
           'button',
           { style: buttonStyle, onClick: this.addMarker },
@@ -12043,6 +12069,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
         type: 'ADD_MARKER',
         url: marker.url,
         title: marker.title,
+        desc: marker.desc,
         place: marker.place,
         latLng: marker.latLng,
         date: marker.date

@@ -11907,8 +11907,7 @@ var App = function (_Component) {
             google: _this3.props.google,
             marker: markers[marker],
             map: _this3.map,
-            deleteMarker: _this3.props.deletemarker,
-            mapCenter: _this3.state.currentCenter
+            deleteMarker: _this3.props.deletemarker
           });
         });
       }
@@ -11927,7 +11926,6 @@ var App = function (_Component) {
       return _react2.default.createElement(
         'div',
         { ref: 'map', style: mapStyle },
-        'MAIN PAGE xxx xxx xxx',
         this.renderMarkers()
       );
     }
@@ -12012,8 +12010,12 @@ var Marker = function (_Component) {
         map: map,
         title: markerInfo.title
       });
+
+      //content window
+      console.log(markerInfo.desc);
+      var contentString = '<h2>' + markerInfo.title + '</h2>' + ('<div>' + markerInfo.desc + '</div>');
       var infowindow = new google.maps.InfoWindow({
-        content: markerInfo.title
+        content: contentString
       });
       marker.addListener('click', function () {
         infowindow.open(map, marker);

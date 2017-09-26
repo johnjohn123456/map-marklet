@@ -22,6 +22,10 @@ const inputStyle = {
   width: '450px',
 };
 
+const descStyle = {
+  width: '450px',
+};
+
 class App extends Component {
   constructor (props) {
     super(props);
@@ -30,17 +34,52 @@ class App extends Component {
 
   }
 
+  componentWillReceiveProps (nextProps) {
+    //force googlemaps to update when component recieves props from redux store
+    if (nextProps.markers !== this.props.markers) {
+      setTimeout(() => {
+        this.setState({foo:new Date()});
+      }, 200);
+    }
+  }
+
+  //called when autocomplete field is filled in findCenter() is filled
+  //sets the state up for input to Redux store but does not send to store
+  placeMarker = (latLng, date) => {
+    this.setState({
+      place: null,
+      latLng: latLng,
+      date: date.toString(),
+    });
+  }
+
+  //dispatches the action
   addMarker = () => {
+    const desc = document.getElementById('desc').value;
     chrome.tabs.getSelected(null, tab => {
       this.props.addMarker({
         url: tab.url,
         title: tab.title,
+        desc: desc,
         place: this.state.place,
         latLng: this.state.latLng,
         date: this.state.date,
       });
     });
   };
+
+  //passed down and called from Marker child component
+  deleteMarker = (marker) => {
+    marker.center = {
+      lat: marker.position.lat(),
+      lng: marker.position.lng(),
+    };
+
+    //set prop latLng as stringified version of the center obj
+    marker.latLng = JSON.stringify(marker.center);
+    this.props.deleteMarker(marker);
+
+  }
 
   //when a place is selected in the autocomplete field, setState with place data.
   findCenter = (e) => {
@@ -59,33 +98,6 @@ class App extends Component {
     });
   }
 
-  placeMarker = (latLng, date) => {
-    this.setState({
-      place: null,
-      latLng: latLng,
-      date: date.toString(),
-    });
-  }
-
-  componentWillReceiveProps (nextProps) {
-    //force googlemaps to update when component recieves props from redux store
-    if (nextProps.markers !== this.props.markers) {
-      setTimeout(() => {
-        this.setState({foo:new Date()});
-      }, 200);
-    }
-  }
-
-  deleteMarker = (marker) => {
-    marker.center = {
-      lat: marker.position.lat(),
-      lng: marker.position.lng(),
-    };
-
-    marker.latLng = JSON.stringify(marker.center);
-    this.props.deleteMarker(marker);
-
-  }
 
   render () {
 
@@ -107,7 +119,21 @@ class App extends Component {
         />
 
         <br />
-        <input id="findCenter" style={inputStyle} type="text" ref="findCenter" onKeyPress={this.findCenter} placeholder="find location"/>
+
+        <input id="findCenter"
+          style={inputStyle}
+          type="text"
+          ref="findCenter"
+          onKeyPress={this.findCenter}
+          placeholder="find location"
+        />
+
+        <br />
+
+        <textarea id="desc" style={descStyle} cols="40" rows="5"/>
+
+        <br />
+
         <button style={buttonStyle} onClick={this.addMarker}>Add Marker</button>
       </div>
     );
@@ -123,6 +149,7 @@ const mapDispatchToProps = (dispatch) => ({
     type: 'ADD_MARKER',
     url: marker.url,
     title: marker.title,
+    desc: marker.desc,
     place: marker.place,
     latLng: marker.latLng,
     date: marker.date,

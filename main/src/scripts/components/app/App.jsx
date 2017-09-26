@@ -72,7 +72,6 @@ class App extends Component {
           marker={markers[marker]}
           map={this.map}
           deleteMarker = {this.props.deletemarker}
-          mapCenter={this.state.currentCenter}
         />;
       });
     }
@@ -85,7 +84,6 @@ class App extends Component {
 
     return (
       <div ref="map" style={mapStyle}>
-        MAIN PAGE xxx xxx xxx
         {this.renderMarkers()}
       </div>
     );

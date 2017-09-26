@@ -1211,6 +1211,7 @@ var reducers = function reducers() {
         markers: _extends({}, state.markers, _defineProperty({}, JSON.stringify(action.latLng), {
           url: action.url,
           title: action.title,
+          desc: action.desc,
           place: action.place,
           latLng: action.latLng,
           date: action.date
