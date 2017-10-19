@@ -1,6 +1,37 @@
-button {
-  background-color: red;
-}
 body {
-  background-color: red !important;
+  background-color: #ebe3cd;
+  margin: 0;
+}
+
+button {
+  background-color: #a5b076;
+  color: #fff;
+  border: none;
+  width: 100vw;
+  height: 40px;
+}
+
+.mapStyle {
+  width: 550px;
+  height: 450px;
+  margin: 0;
+}
+
+.app {
+  width: 550px;
+  height: 500px;
+}
+
+#findCenter {
+  position: absolute;
+  height: 24px;
+  width: 300px;
+  top: 10px;
+  left: 120px;
+}
+
+#desc {
+  width: 98.8vw;
+  height: 60px;
+  font-size: 1.2em;
 }

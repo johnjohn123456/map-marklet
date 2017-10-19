@@ -3,18 +3,11 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
-import GoogleMapStyles from './styles';
+import GoogleMapStyles from './styles.js';
 
 import Marker from './Marker';
 
-import './styles';
-
-const mapStyle = {
-  margin: '5px',
-  width: '550px',
-  height: '350px',
-  backgroundColor :'green',
-};
+import './styles.scss';
 
 class GoogleMap extends Component {
 
@@ -154,7 +147,7 @@ class GoogleMap extends Component {
 
   render () {
     return (
-      <div ref="map" style={mapStyle}>
+      <div ref="map" className="mapStyle">
         {this.renderMarkers()}
       </div>
     );
@@ -162,10 +155,10 @@ class GoogleMap extends Component {
 }
 
 GoogleMap.defaultProps = {
-  zoom: 13,
+  zoom: 8,
   initialCenter: {
-    lat: 51.5073509,
-    lng: -0.12775829999998223,
+    lat: 64.128288,
+    lng: -21.827774,
   },
 };
 

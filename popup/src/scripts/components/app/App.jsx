@@ -6,26 +6,8 @@ import {GoogleApiWrapper} from 'google-maps-react';
 
 import GoogleMap from './GoogleMap';
 import Marker from './Marker';
-import './styles.scss'
 
-const AppStyle = {
-  width: '600px',
-  height: '600px',
-  backgroundColor :'gray',
-};
-
-const buttonStyle = {
-  backgroundColor: '#778899',
-  color: 'white',
-};
-
-const inputStyle = {
-  width: '450px',
-};
-
-const descStyle = {
-  width: '450px',
-};
+import './styles.scss';
 
 class App extends Component {
   constructor (props) {
@@ -108,7 +90,7 @@ class App extends Component {
 
 
     return (
-      <div style={AppStyle}>
+      <div className="app">
 
         <GoogleMap ref="map"
           google={this.props.google}
@@ -119,23 +101,16 @@ class App extends Component {
           latLng={this.state.latLng}
         />
 
-        <br />
-
         <input id="findCenter"
-          style={inputStyle}
           type="text"
           ref="findCenter"
           onKeyPress={this.findCenter}
           placeholder="find location"
         />
 
-        <br />
+        <textarea id="desc" />
 
-        <textarea id="desc" style={descStyle} cols="40" rows="5"/>
-
-        <br />
-
-        <button style={buttonStyle} onClick={this.addMarker}>Add Marker</button>
+        <button onClick={this.addMarker}>Add Marker</button>
       </div>
     );
   }
