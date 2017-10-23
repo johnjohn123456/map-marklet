@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Tyler Shaddix",
+  "author": "Isabella Chen",
   "dependencies": {
     "google-maps-react": "^1.1.0",
     "prop-types": "^15.5.10",
