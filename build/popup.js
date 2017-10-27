@@ -12000,6 +12000,14 @@ var App = function (_Component) {
   }
 
   _createClass(App, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
+        console.log('token ', token);
+      });
+      console.log('foobar');
+    }
+  }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
       var _this2 = this;

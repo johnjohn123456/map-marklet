@@ -17,6 +17,13 @@ class App extends Component {
 
   }
 
+  componentWillMount () {
+    chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
+      console.log('token ',token);
+    });
+    console.log('foobar');
+  }
+
   componentWillReceiveProps (nextProps) {
     //force googlemaps to update when component recieves props from redux store
     if (nextProps.markers !== this.props.markers) {
@@ -80,7 +87,6 @@ class App extends Component {
       });
     });
   }
-
 
   render () {
 
