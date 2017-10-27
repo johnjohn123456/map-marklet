@@ -11945,6 +11945,30 @@ var App = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
+    _this.renderUserButton = function () {
+      if (_this.state.authorization) {
+        return _react2.default.createElement(
+          'button',
+          null,
+          'My Trips'
+        );
+      } else {
+        return _react2.default.createElement(
+          'button',
+          { onClick: _this.signIn },
+          'Login'
+        );
+      }
+    };
+
+    _this.signIn = function () {
+      chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
+        _this.setState({
+          authorization: token
+        });
+      });
+    };
+
     _this.placeMarker = function (latLng, date) {
       _this.setState({
         place: null,
@@ -11999,15 +12023,16 @@ var App = function (_Component) {
     return _this;
   }
 
+  // componentWillMount () {
+  //   chrome.identity.getAuthToken({ 'interactive': true }, (token) => {
+  //     this.setState({
+  //       authorization: token,
+  //     });
+  //     console.log('token ',token);
+  //   });
+  // }
+
   _createClass(App, [{
-    key: 'componentWillMount',
-    value: function componentWillMount() {
-      chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
-        console.log('token ', token);
-      });
-      console.log('foobar');
-    }
-  }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
       var _this2 = this;
@@ -12066,7 +12091,8 @@ var App = function (_Component) {
           'button',
           { onClick: this.addMarker },
           'Add Marker'
-        )
+        ),
+        this.renderUserButton()
       );
     }
   }]);

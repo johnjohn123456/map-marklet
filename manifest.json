@@ -12,8 +12,7 @@
   },
   "browser_action": {
     "default_title": "Map Marklet",
-    "default_popup": "popup.html",
-    "default_icon": "map-marklet-logo-128.png"
+    "default_popup": "popup.html"
   },
   "content_security_policy": "script-src 'self' https://maps.googleapis.com https://connect.facebook.net/en_US/all.js; object-src 'self'",
   "content_scripts": [
@@ -28,7 +27,9 @@
   ],
   "permissions": [
     "tabs",
-    "identity"
+    "identity",
+     "*://*.google.com/*",
+    "storage"
   ],
   "oauth2": {
         "client_id": "658325221633-v2aurmcset7hj6ajq803cv438k7cf5ti.apps.googleusercontent.com",
