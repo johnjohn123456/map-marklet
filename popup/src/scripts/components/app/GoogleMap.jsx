@@ -101,7 +101,7 @@ class GoogleMap extends Component {
         styles: GoogleMapStyles,
       };
       this.map = new maps.Map(node, mapConfig);
-
+      this.renderMarkers();
       //add listener for clicks on map to place markers
       this.map.addListener('click', (e) => {
         this.setTempMarker(e.latLng);
@@ -130,17 +130,19 @@ class GoogleMap extends Component {
     });
   }
 
+
   renderMarkers () {
     if (this.props.markers) {
       const markers = this.props.markers;
-      return Object.keys(markers).map(marker => {
-        return <Marker
-          key={marker}
-          google={this.props.google}
-          marker={markers[marker]}
-          map={this.map}
-          deleteMarker={this.props.deleteMarker}
-        />;
+      const google = this.props.google;
+      return Object.keys(markers).map(markerKey => {
+        const marker = new google.maps.Marker({
+          position: markers[markerKey].latLng,
+          map: this.map,
+        });
+        marker.addListener('click', () => {
+          this.props.deleteMarker(marker);
+        });
       });
     }
   }
@@ -148,7 +150,6 @@ class GoogleMap extends Component {
   render () {
     return (
       <div ref="map" className="mapStyle">
-        {this.renderMarkers()}
       </div>
     );
   }

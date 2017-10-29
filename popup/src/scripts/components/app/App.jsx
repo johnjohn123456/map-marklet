@@ -17,15 +17,6 @@ class App extends Component {
 
   }
 
-  // componentWillMount () {
-  //   chrome.identity.getAuthToken({ 'interactive': true }, (token) => {
-  //     this.setState({
-  //       authorization: token,
-  //     });
-  //     console.log('token ',token);
-  //   });
-  // }
-
   renderUserButton = () => {
     if (this.state.authorization) {
       return <button>My Trips</button>;
@@ -78,6 +69,7 @@ class App extends Component {
 
   //passed down and called from Marker child component
   deleteMarker = (marker) => {
+    console.log('deleted marker triggered: ', marker);
     marker.center = {
       lat: marker.position.lat(),
       lng: marker.position.lng(),

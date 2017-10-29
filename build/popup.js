@@ -7115,11 +7115,7 @@ var Marker = function (_Component) {
       var marker = new google.maps.Marker({
         position: markerInfo.latLng,
         map: map
-        // title: markerInfo.title,
       });
-      // const infowindow = new google.maps.InfoWindow({
-      //   content: markerInfo.title,
-      // });
       marker.addListener('click', function () {
         _this2.props.deleteMarker(marker);
       });
@@ -11992,6 +11988,7 @@ var App = function (_Component) {
     };
 
     _this.deleteMarker = function (marker) {
+      console.log('deleted marker triggered: ', marker);
       marker.center = {
         lat: marker.position.lat(),
         lng: marker.position.lng()
@@ -12022,15 +12019,6 @@ var App = function (_Component) {
 
     return _this;
   }
-
-  // componentWillMount () {
-  //   chrome.identity.getAuthToken({ 'interactive': true }, (token) => {
-  //     this.setState({
-  //       authorization: token,
-  //     });
-  //     console.log('token ',token);
-  //   });
-  // }
 
   _createClass(App, [{
     key: 'componentWillReceiveProps',
@@ -12289,7 +12277,7 @@ var GoogleMap = function (_Component) {
           styles: _styles2.default
         };
         this.map = new maps.Map(node, mapConfig);
-
+        this.renderMarkers();
         //add listener for clicks on map to place markers
         this.map.addListener('click', function (e) {
           _this2.setTempMarker(e.latLng);
@@ -12327,13 +12315,14 @@ var GoogleMap = function (_Component) {
 
       if (this.props.markers) {
         var markers = this.props.markers;
-        return Object.keys(markers).map(function (marker) {
-          return _react2.default.createElement(_Marker2.default, {
-            key: marker,
-            google: _this4.props.google,
-            marker: markers[marker],
-            map: _this4.map,
-            deleteMarker: _this4.props.deleteMarker
+        var google = this.props.google;
+        return Object.keys(markers).map(function (markerKey) {
+          var marker = new google.maps.Marker({
+            position: markers[markerKey].latLng,
+            map: _this4.map
+          });
+          marker.addListener('click', function () {
+            _this4.props.deleteMarker(marker);
           });
         });
       }
@@ -12341,11 +12330,7 @@ var GoogleMap = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      return _react2.default.createElement(
-        'div',
-        { ref: 'map', className: 'mapStyle' },
-        this.renderMarkers()
-      );
+      return _react2.default.createElement('div', { ref: 'map', className: 'mapStyle' });
     }
   }]);
 
