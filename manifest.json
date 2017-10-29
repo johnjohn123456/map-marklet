@@ -1,8 +1,9 @@
 {
   "manifest_version": 2,
-  "name": "RCR",
-  "description": "React, Chrome, and Redux example",
+  "name": "Map Marklet",
+  "description": "Bookmarklet for Google Maps",
   "version": "0.0.0.1",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvV6WbCyOCSKPbLYbbe6Qtp24z4iw2WXxBU1nbYJQPO22f0eizdeseIn2TRAE4q7d6N94YNMGXnHyXJXSUiubVZ79ePR5iLovBbgtwcxgaM4XSvKjz8jaP3JGLKPMaNPbmXZdWZAykFEEgighG2f6uZCht3IGNsg3GiTXQ8pCFhgDg5Iw4bRjQQGOV6q8vLL7/Q74yE97Ac4G9IYnYJFYH/OieDezKx68IQI0H/18Ovz3QPF8f/3FvRnuXwdjCl34hfbMvwKM1vwpoPJF2tTBchat2/83ja3r+AtnTvlzXyRDoD89J6cV4cJueZ9DqTQemCFKZgNNKS7mU1fpV4vZ9wIDAQAB",
   "background": {
     "scripts": [
       "event.js"
@@ -10,10 +11,10 @@
     "persistent": true
   },
   "browser_action": {
-    "default_title": "RCR Example",
+    "default_title": "Map Marklet",
     "default_popup": "popup.html"
   },
-  "content_security_policy": "script-src 'self' https://maps.googleapis.com; object-src 'self'",
+  "content_security_policy": "script-src 'self' https://maps.googleapis.com https://connect.facebook.net/en_US/all.js; object-src 'self'",
   "content_scripts": [
     {
       "matches": ["*://*/*"],
@@ -25,6 +26,13 @@
     "./main.html"
   ],
   "permissions": [
-    "tabs"
-  ]
+    "tabs",
+    "identity",
+     "*://*.google.com/*",
+    "storage"
+  ],
+  "oauth2": {
+        "client_id": "658325221633-v2aurmcset7hj6ajq803cv438k7cf5ti.apps.googleusercontent.com",
+        "scopes": ["profile"]
+    }
 }

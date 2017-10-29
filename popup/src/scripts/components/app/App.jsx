@@ -17,6 +17,31 @@ class App extends Component {
 
   }
 
+  // componentWillMount () {
+  //   chrome.identity.getAuthToken({ 'interactive': true }, (token) => {
+  //     this.setState({
+  //       authorization: token,
+  //     });
+  //     console.log('token ',token);
+  //   });
+  // }
+
+  renderUserButton = () => {
+    if (this.state.authorization) {
+      return <button>My Trips</button>;
+    } else {
+      return <button onClick={this.signIn}>Login</button>;
+    }
+  }
+
+  signIn = () => {
+    chrome.identity.getAuthToken({ 'interactive': true }, (token) => {
+      this.setState({
+        authorization: token,
+      });
+    });
+  }
+
   componentWillReceiveProps (nextProps) {
     //force googlemaps to update when component recieves props from redux store
     if (nextProps.markers !== this.props.markers) {
@@ -81,7 +106,6 @@ class App extends Component {
     });
   }
 
-
   render () {
 
     if (!this.props.loaded) {
@@ -111,6 +135,8 @@ class App extends Component {
         <textarea id="desc" />
 
         <button onClick={this.addMarker}>Add Marker</button>
+        {this.renderUserButton()}
+
       </div>
     );
   }
