@@ -11988,14 +11988,14 @@ var App = function (_Component) {
     };
 
     _this.deleteMarker = function (marker) {
-      console.log('deleted marker triggered: ', marker);
       marker.center = {
         lat: marker.position.lat(),
         lng: marker.position.lng()
       };
 
-      //set prop latLng as stringified version of the center obj
+      // //set prop latLng as stringified version of the center obj
       marker.latLng = JSON.stringify(marker.center);
+      console.log('deleted marker triggered: ', marker);
       _this.props.deleteMarker(marker);
     };
 
@@ -12099,12 +12099,14 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     addMarker: function addMarker(marker) {
       return dispatch({
         type: 'ADD_MARKER',
-        url: marker.url,
-        title: marker.title,
-        desc: marker.desc,
-        place: marker.place,
-        latLng: marker.latLng,
-        date: marker.date
+        marker: {
+          url: marker.url,
+          title: marker.title,
+          desc: marker.desc,
+          place: marker.place,
+          latLng: marker.latLng,
+          date: marker.date
+        }
       });
     },
 
@@ -12287,31 +12289,21 @@ var GoogleMap = function (_Component) {
   }, {
     key: 'getLatestMarker',
     value: function getLatestMarker() {
-      var _this3 = this;
-
-      //transpose markers from obj into array
-      var markers = [];
-      Object.keys(this.props.markers).forEach(function (marker) {
-        markers.push(_this3.props.markers[marker]);
-      });
-
-      var latestAddedMarker = markers.reduce(function (a, b) {
-        var aDate = new Date(a.date);
-        var bDate = new Date(b.date);
-        return bDate > aDate ? b : a;
-      });
-
-      this.setState({
-        currentCenter: {
-          lat: latestAddedMarker.latLng.lat,
-          lng: latestAddedMarker.latLng.lng
-        }
-      });
+      if (this.props.markers.length > 0) {
+        var markers = this.props.markers;
+        var latestAddedMarker = markers[markers.length - 1];
+        this.setState({
+          currentCenter: {
+            lat: latestAddedMarker.latLng.lat,
+            lng: latestAddedMarker.latLng.lng
+          }
+        });
+      }
     }
   }, {
     key: 'renderMarkers',
     value: function renderMarkers() {
-      var _this4 = this;
+      var _this3 = this;
 
       if (this.props.markers) {
         var markers = this.props.markers;
@@ -12319,10 +12311,10 @@ var GoogleMap = function (_Component) {
         return Object.keys(markers).map(function (markerKey) {
           var marker = new google.maps.Marker({
             position: markers[markerKey].latLng,
-            map: _this4.map
+            map: _this3.map
           });
           marker.addListener('click', function () {
-            _this4.props.deleteMarker(marker);
+            _this3.props.deleteMarker(marker);
           });
         });
       }

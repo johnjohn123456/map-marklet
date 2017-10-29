@@ -110,24 +110,16 @@ class GoogleMap extends Component {
   }
 
   getLatestMarker () {
-    //transpose markers from obj into array
-    const markers = [];
-    Object.keys(this.props.markers).forEach((marker) => {
-      markers.push(this.props.markers[marker]);
-    });
-
-    const latestAddedMarker = markers.reduce((a,b)=>{
-      const aDate = new Date(a.date);
-      const bDate = new Date(b.date);
-      return bDate > aDate ? b : a;
-    });
-
-    this.setState({
-      currentCenter: {
-        lat: latestAddedMarker.latLng.lat,
-        lng: latestAddedMarker.latLng.lng,
-      },
-    });
+    if (this.props.markers.length > 0) {
+      const markers = this.props.markers;
+      const latestAddedMarker = markers[markers.length-1];
+      this.setState({
+        currentCenter: {
+          lat: latestAddedMarker.latLng.lat,
+          lng: latestAddedMarker.latLng.lng,
+        },
+      });      
+    }
   }
 
 

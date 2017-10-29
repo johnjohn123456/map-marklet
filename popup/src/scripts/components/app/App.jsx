@@ -69,14 +69,14 @@ class App extends Component {
 
   //passed down and called from Marker child component
   deleteMarker = (marker) => {
-    console.log('deleted marker triggered: ', marker);
     marker.center = {
       lat: marker.position.lat(),
       lng: marker.position.lng(),
     };
 
-    //set prop latLng as stringified version of the center obj
+    // //set prop latLng as stringified version of the center obj
     marker.latLng = JSON.stringify(marker.center);
+    console.log('deleted marker triggered: ', marker);
     this.props.deleteMarker(marker);
 
   }
@@ -141,12 +141,14 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   addMarker: (marker) => dispatch({
     type: 'ADD_MARKER',
-    url: marker.url,
-    title: marker.title,
-    desc: marker.desc,
-    place: marker.place,
-    latLng: marker.latLng,
-    date: marker.date,
+    marker: {
+      url: marker.url,
+      title: marker.title,
+      desc: marker.desc,
+      place: marker.place,
+      latLng: marker.latLng,
+      date: marker.date,
+    },
   }),
 
   deleteMarker: (marker) => dispatch({
