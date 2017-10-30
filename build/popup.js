@@ -11974,11 +11974,6 @@ var App = function (_Component) {
         var place = autocomplete.getPlace();
         var date = new Date();
         _this.placeMarker(place, place.geometry.location, date);
-        // this.setState({
-        //   place: place,
-        //   latLng: place.geometry.location,
-        //   date: date.toString(),
-        // });
       });
     };
 
@@ -12039,7 +12034,8 @@ var App = function (_Component) {
     //sets the state up for input to Redux store but does not send to store
 
 
-    //when a place is selected in the autocomplete field, setState with place data.
+    //when a place is selected in the autocomplete field, placeMarker sets the state.
+    //change in state is passed to GoogleMap child component which calls setTempMarker
 
 
     //dispatches the action
@@ -12198,12 +12194,9 @@ var GoogleMap = function (_Component) {
       _this.tempMarker = marker;
       // this.map.panTo(e.latLng);
       marker.setMap(_this.map);
-      //what if there is no place ie when marker set by map click
-      if (place) {
-        _this.props.placeMarker(place, latLng, date);
-      } else {
-        _this.props.placeMarker(null, latLng, date);
-      }
+      //if place is not undefined temp marker was set via autocomplete & parent state is already set
+      //only set the parent state if temp marker was set via clicking
+      if (!place) _this.props.placeMarker(null, latLng, date);
     };
 
     var _this$props$initialCe = _this.props.initialCenter,

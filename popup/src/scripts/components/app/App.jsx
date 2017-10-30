@@ -52,7 +52,8 @@ class App extends Component {
     });
   }
 
-  //when a place is selected in the autocomplete field, setState with place data.
+  //when a place is selected in the autocomplete field, placeMarker sets the state.
+  //change in state is passed to GoogleMap child component which calls setTempMarker
   findCenter = (e) => {
     const savedEvent = e;
     const findCenterInputRef = this.refs.findCenter;
@@ -62,11 +63,6 @@ class App extends Component {
       let place = autocomplete.getPlace();
       const date = new Date();
       this.placeMarker(place, place.geometry.location, date);
-      // this.setState({
-      //   place: place,
-      //   latLng: place.geometry.location,
-      //   date: date.toString(),
-      // });
     });
   }
 

@@ -78,12 +78,9 @@ class GoogleMap extends Component {
     this.tempMarker = marker;
     // this.map.panTo(e.latLng);
     marker.setMap(this.map);
-    //what if there is no place ie when marker set by map click
-    if (place) {
-      this.props.placeMarker(place, latLng, date);
-    } else {
-      this.props.placeMarker(null, latLng, date);
-    }
+    //if place is not undefined temp marker was set via autocomplete & parent state is already set
+    //only set the parent state if temp marker was set via clicking
+    if (!place) this.props.placeMarker(null, latLng, date);
   }
 
   loadMap () {
