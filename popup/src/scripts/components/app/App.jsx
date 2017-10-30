@@ -25,13 +25,13 @@ class App extends Component {
     }
   }
 
-  signIn = () => {
-    chrome.identity.getAuthToken({ 'interactive': true }, (token) => {
-      this.setState({
-        authorization: token,
-      });
-    });
-  }
+  // signIn = () => {
+  //   chrome.identity.getAuthToken({ 'interactive': true }, (token) => {
+  //     this.setState({
+  //       authorization: token,
+  //     });
+  //   });
+  // }
 
   componentWillReceiveProps (nextProps) {
     //force googlemaps to update when component recieves props from redux store
@@ -44,11 +44,29 @@ class App extends Component {
 
   //called when autocomplete field is filled in findCenter() is filled
   //sets the state up for input to Redux store but does not send to store
-  placeMarker = (latLng, date) => {
+  placeMarker = (place, latLng, date) => {
     this.setState({
-      place: null,
+      place: place,
       latLng: latLng,
       date: date.toString(),
+    });
+  }
+
+  //when a place is selected in the autocomplete field, setState with place data.
+  findCenter = (e) => {
+    const savedEvent = e;
+    const findCenterInputRef = this.refs.findCenter;
+    const input = ReactDOM.findDOMNode(findCenterInputRef);
+    const autocomplete = new google.maps.places.Autocomplete(input);
+    autocomplete.addListener('place_changed', () => {
+      let place = autocomplete.getPlace();
+      const date = new Date();
+      this.placeMarker(place, place.geometry.location, date);
+      // this.setState({
+      //   place: place,
+      //   latLng: place.geometry.location,
+      //   date: date.toString(),
+      // });
     });
   }
 
@@ -76,26 +94,7 @@ class App extends Component {
 
     // //set prop latLng as stringified version of the center obj
     marker.latLng = JSON.stringify(marker.center);
-    console.log('deleted marker triggered: ', marker);
     this.props.deleteMarker(marker);
-
-  }
-
-  //when a place is selected in the autocomplete field, setState with place data.
-  findCenter = (e) => {
-    const savedEvent = e;
-    const findCenterInputRef = this.refs.findCenter;
-    const input = ReactDOM.findDOMNode(findCenterInputRef);
-    const autocomplete = new google.maps.places.Autocomplete(input);
-    autocomplete.addListener('place_changed', () => {
-      let place = autocomplete.getPlace();
-      const date = new Date();
-      this.setState({
-        place: place,
-        latLng: place.geometry.location,
-        date: date.toString(),
-      });
-    });
   }
 
   render () {

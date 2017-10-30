@@ -54,7 +54,7 @@ class GoogleMap extends Component {
     //otherwise props will change when temp marker is set via clicking
     if (this.props.latLng !== nextProps.latLng) {
       this.map.panTo(nextProps.latLng);
-      this.setTempMarker(nextProps.latLng);
+      this.setTempMarker(nextProps.place, nextProps.latLng);
     }
     //when DELETE_MARKER is dispatched, re-load the map
     if (this.props.markers !== nextProps.markers) {
@@ -62,7 +62,7 @@ class GoogleMap extends Component {
     }
   }
 
-  setTempMarker = (latLng) => {
+  setTempMarker = (place, latLng) => {
     //if the google api has loaded into props
     const {google} = this.props;
     const maps = google.maps;
@@ -78,7 +78,12 @@ class GoogleMap extends Component {
     this.tempMarker = marker;
     // this.map.panTo(e.latLng);
     marker.setMap(this.map);
-    this.props.placeMarker(latLng, date);
+    //what if there is no place ie when marker set by map click
+    if (place) {
+      this.props.placeMarker(place, latLng, date);
+    } else {
+      this.props.placeMarker(null, latLng, date);
+    }
   }
 
   loadMap () {
@@ -104,7 +109,7 @@ class GoogleMap extends Component {
       this.renderMarkers();
       //add listener for clicks on map to place markers
       this.map.addListener('click', (e) => {
-        this.setTempMarker(e.latLng);
+        this.setTempMarker(null, e.latLng);
       });
     }
   }
@@ -118,7 +123,7 @@ class GoogleMap extends Component {
           lat: latestAddedMarker.latLng.lat,
           lng: latestAddedMarker.latLng.lng,
         },
-      });      
+      });
     }
   }
 
@@ -133,6 +138,7 @@ class GoogleMap extends Component {
           map: this.map,
         });
         marker.addListener('click', () => {
+          marker.setMap(null);
           this.props.deleteMarker(marker);
         });
       });

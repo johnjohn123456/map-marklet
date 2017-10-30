@@ -11957,19 +11957,28 @@ var App = function (_Component) {
       }
     };
 
-    _this.signIn = function () {
-      chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
-        _this.setState({
-          authorization: token
-        });
+    _this.placeMarker = function (place, latLng, date) {
+      _this.setState({
+        place: place,
+        latLng: latLng,
+        date: date.toString()
       });
     };
 
-    _this.placeMarker = function (latLng, date) {
-      _this.setState({
-        place: null,
-        latLng: latLng,
-        date: date.toString()
+    _this.findCenter = function (e) {
+      var savedEvent = e;
+      var findCenterInputRef = _this.refs.findCenter;
+      var input = _reactDom2.default.findDOMNode(findCenterInputRef);
+      var autocomplete = new google.maps.places.Autocomplete(input);
+      autocomplete.addListener('place_changed', function () {
+        var place = autocomplete.getPlace();
+        var date = new Date();
+        _this.placeMarker(place, place.geometry.location, date);
+        // this.setState({
+        //   place: place,
+        //   latLng: place.geometry.location,
+        //   date: date.toString(),
+        // });
       });
     };
 
@@ -11995,24 +12004,7 @@ var App = function (_Component) {
 
       // //set prop latLng as stringified version of the center obj
       marker.latLng = JSON.stringify(marker.center);
-      console.log('deleted marker triggered: ', marker);
       _this.props.deleteMarker(marker);
-    };
-
-    _this.findCenter = function (e) {
-      var savedEvent = e;
-      var findCenterInputRef = _this.refs.findCenter;
-      var input = _reactDom2.default.findDOMNode(findCenterInputRef);
-      var autocomplete = new google.maps.places.Autocomplete(input);
-      autocomplete.addListener('place_changed', function () {
-        var place = autocomplete.getPlace();
-        var date = new Date();
-        _this.setState({
-          place: place,
-          latLng: place.geometry.location,
-          date: date.toString()
-        });
-      });
     };
 
     _this.state = {};
@@ -12022,6 +12014,16 @@ var App = function (_Component) {
 
   _createClass(App, [{
     key: 'componentWillReceiveProps',
+
+
+    // signIn = () => {
+    //   chrome.identity.getAuthToken({ 'interactive': true }, (token) => {
+    //     this.setState({
+    //       authorization: token,
+    //     });
+    //   });
+    // }
+
     value: function componentWillReceiveProps(nextProps) {
       var _this2 = this;
 
@@ -12037,13 +12039,13 @@ var App = function (_Component) {
     //sets the state up for input to Redux store but does not send to store
 
 
+    //when a place is selected in the autocomplete field, setState with place data.
+
+
     //dispatches the action
 
 
     //passed down and called from Marker child component
-
-
-    //when a place is selected in the autocomplete field, setState with place data.
 
   }, {
     key: 'render',
@@ -12179,7 +12181,7 @@ var GoogleMap = function (_Component) {
 
     _this.tempMarker = null;
 
-    _this.setTempMarker = function (latLng) {
+    _this.setTempMarker = function (place, latLng) {
       //if the google api has loaded into props
       var google = _this.props.google;
 
@@ -12196,7 +12198,12 @@ var GoogleMap = function (_Component) {
       _this.tempMarker = marker;
       // this.map.panTo(e.latLng);
       marker.setMap(_this.map);
-      _this.props.placeMarker(latLng, date);
+      //what if there is no place ie when marker set by map click
+      if (place) {
+        _this.props.placeMarker(place, latLng, date);
+      } else {
+        _this.props.placeMarker(null, latLng, date);
+      }
     };
 
     var _this$props$initialCe = _this.props.initialCenter,
@@ -12244,7 +12251,7 @@ var GoogleMap = function (_Component) {
       //otherwise props will change when temp marker is set via clicking
       if (this.props.latLng !== nextProps.latLng) {
         this.map.panTo(nextProps.latLng);
-        this.setTempMarker(nextProps.latLng);
+        this.setTempMarker(nextProps.place, nextProps.latLng);
       }
       //when DELETE_MARKER is dispatched, re-load the map
       if (this.props.markers !== nextProps.markers) {
@@ -12282,7 +12289,7 @@ var GoogleMap = function (_Component) {
         this.renderMarkers();
         //add listener for clicks on map to place markers
         this.map.addListener('click', function (e) {
-          _this2.setTempMarker(e.latLng);
+          _this2.setTempMarker(null, e.latLng);
         });
       }
     }
@@ -12314,6 +12321,7 @@ var GoogleMap = function (_Component) {
             map: _this3.map
           });
           marker.addListener('click', function () {
+            marker.setMap(null);
             _this3.props.deleteMarker(marker);
           });
         });
