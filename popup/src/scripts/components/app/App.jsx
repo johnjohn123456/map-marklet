@@ -14,24 +14,7 @@ class App extends Component {
     super(props);
 
     this.state = {};
-
   }
-
-  renderUserButton = () => {
-    if (this.state.authorization) {
-      return <button>My Trips</button>;
-    } else {
-      return <button onClick={this.signIn}>Login</button>;
-    }
-  }
-
-  // signIn = () => {
-  //   chrome.identity.getAuthToken({ 'interactive': true }, (token) => {
-  //     this.setState({
-  //       authorization: token,
-  //     });
-  //   });
-  // }
 
   componentWillReceiveProps (nextProps) {
     //force googlemaps to update when component recieves props from redux store
@@ -122,7 +105,6 @@ class App extends Component {
         <textarea id="desc" />
 
         <button onClick={this.addMarker}>Add Marker</button>
-        {this.renderUserButton()}
 
       </div>
     );
