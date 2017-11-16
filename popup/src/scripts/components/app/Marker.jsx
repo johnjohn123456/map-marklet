@@ -21,11 +21,7 @@ class Marker extends Component {
     const marker = new google.maps.Marker({
       position: markerInfo.latLng,
       map: map,
-      // title: markerInfo.title,
     });
-    // const infowindow = new google.maps.InfoWindow({
-    //   content: markerInfo.title,
-    // });
     marker.addListener('click', () => {
       this.props.deleteMarker(marker);
     });

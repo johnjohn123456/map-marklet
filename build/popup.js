@@ -7115,11 +7115,7 @@ var Marker = function (_Component) {
       var marker = new google.maps.Marker({
         position: markerInfo.latLng,
         map: map
-        // title: markerInfo.title,
       });
-      // const infowindow = new google.maps.InfoWindow({
-      //   content: markerInfo.title,
-      // });
       marker.addListener('click', function () {
         _this2.props.deleteMarker(marker);
       });
@@ -11945,35 +11941,23 @@ var App = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
-    _this.renderUserButton = function () {
-      if (_this.state.authorization) {
-        return _react2.default.createElement(
-          'button',
-          null,
-          'My Trips'
-        );
-      } else {
-        return _react2.default.createElement(
-          'button',
-          { onClick: _this.signIn },
-          'Login'
-        );
-      }
-    };
-
-    _this.signIn = function () {
-      chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
-        _this.setState({
-          authorization: token
-        });
+    _this.placeMarker = function (place, latLng, date) {
+      _this.setState({
+        place: place,
+        latLng: latLng,
+        date: date.toString()
       });
     };
 
-    _this.placeMarker = function (latLng, date) {
-      _this.setState({
-        place: null,
-        latLng: latLng,
-        date: date.toString()
+    _this.findCenter = function (e) {
+      var savedEvent = e;
+      var findCenterInputRef = _this.refs.findCenter;
+      var input = _reactDom2.default.findDOMNode(findCenterInputRef);
+      var autocomplete = new google.maps.places.Autocomplete(input);
+      autocomplete.addListener('place_changed', function () {
+        var place = autocomplete.getPlace();
+        var date = new Date();
+        _this.placeMarker(place, place.geometry.location, date);
       });
     };
 
@@ -11997,40 +11981,14 @@ var App = function (_Component) {
         lng: marker.position.lng()
       };
 
-      //set prop latLng as stringified version of the center obj
+      // //set prop latLng as stringified version of the center obj
       marker.latLng = JSON.stringify(marker.center);
       _this.props.deleteMarker(marker);
     };
 
-    _this.findCenter = function (e) {
-      var savedEvent = e;
-      var findCenterInputRef = _this.refs.findCenter;
-      var input = _reactDom2.default.findDOMNode(findCenterInputRef);
-      var autocomplete = new google.maps.places.Autocomplete(input);
-      autocomplete.addListener('place_changed', function () {
-        var place = autocomplete.getPlace();
-        var date = new Date();
-        _this.setState({
-          place: place,
-          latLng: place.geometry.location,
-          date: date.toString()
-        });
-      });
-    };
-
     _this.state = {};
-
     return _this;
   }
-
-  // componentWillMount () {
-  //   chrome.identity.getAuthToken({ 'interactive': true }, (token) => {
-  //     this.setState({
-  //       authorization: token,
-  //     });
-  //     console.log('token ',token);
-  //   });
-  // }
 
   _createClass(App, [{
     key: 'componentWillReceiveProps',
@@ -12049,13 +12007,14 @@ var App = function (_Component) {
     //sets the state up for input to Redux store but does not send to store
 
 
+    //when a place is selected in the autocomplete field, placeMarker sets the state.
+    //change in state is passed to GoogleMap child component which calls setTempMarker
+
+
     //dispatches the action
 
 
     //passed down and called from Marker child component
-
-
-    //when a place is selected in the autocomplete field, setState with place data.
 
   }, {
     key: 'render',
@@ -12091,8 +12050,7 @@ var App = function (_Component) {
           'button',
           { onClick: this.addMarker },
           'Add Marker'
-        ),
-        this.renderUserButton()
+        )
       );
     }
   }]);
@@ -12111,12 +12069,14 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     addMarker: function addMarker(marker) {
       return dispatch({
         type: 'ADD_MARKER',
-        url: marker.url,
-        title: marker.title,
-        desc: marker.desc,
-        place: marker.place,
-        latLng: marker.latLng,
-        date: marker.date
+        marker: {
+          url: marker.url,
+          title: marker.title,
+          desc: marker.desc,
+          place: marker.place,
+          latLng: marker.latLng,
+          date: marker.date
+        }
       });
     },
 
@@ -12189,7 +12149,7 @@ var GoogleMap = function (_Component) {
 
     _this.tempMarker = null;
 
-    _this.setTempMarker = function (latLng) {
+    _this.setTempMarker = function (place, latLng) {
       //if the google api has loaded into props
       var google = _this.props.google;
 
@@ -12206,7 +12166,9 @@ var GoogleMap = function (_Component) {
       _this.tempMarker = marker;
       // this.map.panTo(e.latLng);
       marker.setMap(_this.map);
-      _this.props.placeMarker(latLng, date);
+      //if place is not undefined temp marker was set via autocomplete & parent state is already set
+      //only set the parent state if temp marker was set via clicking
+      if (!place) _this.props.placeMarker(null, latLng, date);
     };
 
     var _this$props$initialCe = _this.props.initialCenter,
@@ -12254,7 +12216,7 @@ var GoogleMap = function (_Component) {
       //otherwise props will change when temp marker is set via clicking
       if (this.props.latLng !== nextProps.latLng) {
         this.map.panTo(nextProps.latLng);
-        this.setTempMarker(nextProps.latLng);
+        this.setTempMarker(nextProps.place, nextProps.latLng);
       }
       //when DELETE_MARKER is dispatched, re-load the map
       if (this.props.markers !== nextProps.markers) {
@@ -12289,51 +12251,43 @@ var GoogleMap = function (_Component) {
           styles: _styles2.default
         };
         this.map = new maps.Map(node, mapConfig);
-
+        this.renderMarkers();
         //add listener for clicks on map to place markers
         this.map.addListener('click', function (e) {
-          _this2.setTempMarker(e.latLng);
+          _this2.setTempMarker(null, e.latLng);
         });
       }
     }
   }, {
     key: 'getLatestMarker',
     value: function getLatestMarker() {
-      var _this3 = this;
-
-      //transpose markers from obj into array
-      var markers = [];
-      Object.keys(this.props.markers).forEach(function (marker) {
-        markers.push(_this3.props.markers[marker]);
-      });
-
-      var latestAddedMarker = markers.reduce(function (a, b) {
-        var aDate = new Date(a.date);
-        var bDate = new Date(b.date);
-        return bDate > aDate ? b : a;
-      });
-
-      this.setState({
-        currentCenter: {
-          lat: latestAddedMarker.latLng.lat,
-          lng: latestAddedMarker.latLng.lng
-        }
-      });
+      if (this.props.markers.length > 0) {
+        var markers = this.props.markers;
+        var latestAddedMarker = markers[markers.length - 1];
+        this.setState({
+          currentCenter: {
+            lat: latestAddedMarker.latLng.lat,
+            lng: latestAddedMarker.latLng.lng
+          }
+        });
+      }
     }
   }, {
     key: 'renderMarkers',
     value: function renderMarkers() {
-      var _this4 = this;
+      var _this3 = this;
 
       if (this.props.markers) {
         var markers = this.props.markers;
-        return Object.keys(markers).map(function (marker) {
-          return _react2.default.createElement(_Marker2.default, {
-            key: marker,
-            google: _this4.props.google,
-            marker: markers[marker],
-            map: _this4.map,
-            deleteMarker: _this4.props.deleteMarker
+        var google = this.props.google;
+        return Object.keys(markers).map(function (markerKey) {
+          var marker = new google.maps.Marker({
+            position: markers[markerKey].latLng,
+            map: _this3.map
+          });
+          marker.addListener('click', function () {
+            marker.setMap(null);
+            _this3.props.deleteMarker(marker);
           });
         });
       }
@@ -12341,11 +12295,7 @@ var GoogleMap = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      return _react2.default.createElement(
-        'div',
-        { ref: 'map', className: 'mapStyle' },
-        this.renderMarkers()
-      );
+      return _react2.default.createElement('div', { ref: 'map', className: 'mapStyle' });
     }
   }]);
 

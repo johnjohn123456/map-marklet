@@ -14,32 +14,6 @@ class App extends Component {
     super(props);
 
     this.state = {};
-
-  }
-
-  // componentWillMount () {
-  //   chrome.identity.getAuthToken({ 'interactive': true }, (token) => {
-  //     this.setState({
-  //       authorization: token,
-  //     });
-  //     console.log('token ',token);
-  //   });
-  // }
-
-  renderUserButton = () => {
-    if (this.state.authorization) {
-      return <button>My Trips</button>;
-    } else {
-      return <button onClick={this.signIn}>Login</button>;
-    }
-  }
-
-  signIn = () => {
-    chrome.identity.getAuthToken({ 'interactive': true }, (token) => {
-      this.setState({
-        authorization: token,
-      });
-    });
   }
 
   componentWillReceiveProps (nextProps) {
@@ -53,11 +27,25 @@ class App extends Component {
 
   //called when autocomplete field is filled in findCenter() is filled
   //sets the state up for input to Redux store but does not send to store
-  placeMarker = (latLng, date) => {
+  placeMarker = (place, latLng, date) => {
     this.setState({
-      place: null,
+      place: place,
       latLng: latLng,
       date: date.toString(),
+    });
+  }
+
+  //when a place is selected in the autocomplete field, placeMarker sets the state.
+  //change in state is passed to GoogleMap child component which calls setTempMarker
+  findCenter = (e) => {
+    const savedEvent = e;
+    const findCenterInputRef = this.refs.findCenter;
+    const input = ReactDOM.findDOMNode(findCenterInputRef);
+    const autocomplete = new google.maps.places.Autocomplete(input);
+    autocomplete.addListener('place_changed', () => {
+      let place = autocomplete.getPlace();
+      const date = new Date();
+      this.placeMarker(place, place.geometry.location, date);
     });
   }
 
@@ -83,27 +71,9 @@ class App extends Component {
       lng: marker.position.lng(),
     };
 
-    //set prop latLng as stringified version of the center obj
+    // //set prop latLng as stringified version of the center obj
     marker.latLng = JSON.stringify(marker.center);
     this.props.deleteMarker(marker);
-
-  }
-
-  //when a place is selected in the autocomplete field, setState with place data.
-  findCenter = (e) => {
-    const savedEvent = e;
-    const findCenterInputRef = this.refs.findCenter;
-    const input = ReactDOM.findDOMNode(findCenterInputRef);
-    const autocomplete = new google.maps.places.Autocomplete(input);
-    autocomplete.addListener('place_changed', () => {
-      let place = autocomplete.getPlace();
-      const date = new Date();
-      this.setState({
-        place: place,
-        latLng: place.geometry.location,
-        date: date.toString(),
-      });
-    });
   }
 
   render () {
@@ -135,7 +105,6 @@ class App extends Component {
         <textarea id="desc" />
 
         <button onClick={this.addMarker}>Add Marker</button>
-        {this.renderUserButton()}
 
       </div>
     );
@@ -149,12 +118,14 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   addMarker: (marker) => dispatch({
     type: 'ADD_MARKER',
-    url: marker.url,
-    title: marker.title,
-    desc: marker.desc,
-    place: marker.place,
-    latLng: marker.latLng,
-    date: marker.date,
+    marker: {
+      url: marker.url,
+      title: marker.title,
+      desc: marker.desc,
+      place: marker.place,
+      latLng: marker.latLng,
+      date: marker.date,
+    },
   }),
 
   deleteMarker: (marker) => dispatch({

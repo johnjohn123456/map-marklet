@@ -54,7 +54,7 @@ class GoogleMap extends Component {
     //otherwise props will change when temp marker is set via clicking
     if (this.props.latLng !== nextProps.latLng) {
       this.map.panTo(nextProps.latLng);
-      this.setTempMarker(nextProps.latLng);
+      this.setTempMarker(nextProps.place, nextProps.latLng);
     }
     //when DELETE_MARKER is dispatched, re-load the map
     if (this.props.markers !== nextProps.markers) {
@@ -62,7 +62,7 @@ class GoogleMap extends Component {
     }
   }
 
-  setTempMarker = (latLng) => {
+  setTempMarker = (place, latLng) => {
     //if the google api has loaded into props
     const {google} = this.props;
     const maps = google.maps;
@@ -78,7 +78,9 @@ class GoogleMap extends Component {
     this.tempMarker = marker;
     // this.map.panTo(e.latLng);
     marker.setMap(this.map);
-    this.props.placeMarker(latLng, date);
+    //if place is not undefined temp marker was set via autocomplete & parent state is already set
+    //only set the parent state if temp marker was set via clicking
+    if (!place) this.props.placeMarker(null, latLng, date);
   }
 
   loadMap () {
@@ -101,46 +103,41 @@ class GoogleMap extends Component {
         styles: GoogleMapStyles,
       };
       this.map = new maps.Map(node, mapConfig);
-
+      this.renderMarkers();
       //add listener for clicks on map to place markers
       this.map.addListener('click', (e) => {
-        this.setTempMarker(e.latLng);
+        this.setTempMarker(null, e.latLng);
       });
     }
   }
 
   getLatestMarker () {
-    //transpose markers from obj into array
-    const markers = [];
-    Object.keys(this.props.markers).forEach((marker) => {
-      markers.push(this.props.markers[marker]);
-    });
-
-    const latestAddedMarker = markers.reduce((a,b)=>{
-      const aDate = new Date(a.date);
-      const bDate = new Date(b.date);
-      return bDate > aDate ? b : a;
-    });
-
-    this.setState({
-      currentCenter: {
-        lat: latestAddedMarker.latLng.lat,
-        lng: latestAddedMarker.latLng.lng,
-      },
-    });
+    if (this.props.markers.length > 0) {
+      const markers = this.props.markers;
+      const latestAddedMarker = markers[markers.length-1];
+      this.setState({
+        currentCenter: {
+          lat: latestAddedMarker.latLng.lat,
+          lng: latestAddedMarker.latLng.lng,
+        },
+      });
+    }
   }
+
 
   renderMarkers () {
     if (this.props.markers) {
       const markers = this.props.markers;
-      return Object.keys(markers).map(marker => {
-        return <Marker
-          key={marker}
-          google={this.props.google}
-          marker={markers[marker]}
-          map={this.map}
-          deleteMarker={this.props.deleteMarker}
-        />;
+      const google = this.props.google;
+      return Object.keys(markers).map(markerKey => {
+        const marker = new google.maps.Marker({
+          position: markers[markerKey].latLng,
+          map: this.map,
+        });
+        marker.addListener('click', () => {
+          marker.setMap(null);
+          this.props.deleteMarker(marker);
+        });
       });
     }
   }
@@ -148,7 +145,6 @@ class GoogleMap extends Component {
   render () {
     return (
       <div ref="map" className="mapStyle">
-        {this.renderMarkers()}
       </div>
     );
   }
