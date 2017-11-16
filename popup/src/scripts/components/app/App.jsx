@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {GoogleApiWrapper} from 'google-maps-react';
 
 import GoogleMap from './GoogleMap';
-import Marker from './Marker';
+
 
 import './styles.scss';
 

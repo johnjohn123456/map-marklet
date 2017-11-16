@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 
 import GoogleMapStyles from './styles.js';
 
-import Marker from './Marker';
 
 import './styles.scss';
 
@@ -31,20 +30,28 @@ class GoogleMap extends Component {
     if (markers.length > 0) {
       this.getLatestMarker();
     }
+    console.log('component did mount');
     this.loadMap();
   }
 
   componentDidUpdate (prevProps, prevState) {
     //check if props has been updated when app is first loaded
     if (prevProps.google !== this.props.google) {
+      console.log('when google loaded');
       this.loadMap();
     }
-    //check it a new marker has been added to redux store and passed down
+    //check if markers have been added or removed in redux store
     if (prevProps.markers !== this.props.markers) {
+      console.log('redux store markers array has been modified');
+      if (this.props.markers.length === 0) {
+        this.loadMap();
+      }
       this.getLatestMarker();
     }
-    //check if state change when placing temp marker
+    //getLatestMarker changes state to focus map around the latest added marker
+    //placing temp marker changes state, triggers map to load with center on new temp marker
     if (prevState !== this.state) {
+      console.log('map center of component state was changed');
       this.loadMap();
     }
   }
@@ -56,10 +63,11 @@ class GoogleMap extends Component {
       this.map.panTo(nextProps.latLng);
       this.setTempMarker(nextProps.place, nextProps.latLng);
     }
-    //when DELETE_MARKER is dispatched, re-load the map
-    if (this.props.markers !== nextProps.markers) {
-      this.loadMap();
-    }
+    //when ADD_MARKER or DELETE_MARKER is dispatched, re-load the map
+    // if (this.props.markers !== nextProps.markers) {
+    //   console.log('add or delete marker');
+    //   this.loadMap();
+    // }
   }
 
   setTempMarker = (place, latLng) => {
@@ -85,6 +93,7 @@ class GoogleMap extends Component {
 
   loadMap () {
     if (this.props && this.props.google) {
+      console.log('load map called');
       //if the google api has loaded into props
       const {google} = this.props;
       const maps = google.maps;
@@ -113,8 +122,10 @@ class GoogleMap extends Component {
 
   getLatestMarker () {
     if (this.props.markers.length > 0) {
+      console.log('get latest marker');
       const markers = this.props.markers;
       const latestAddedMarker = markers[markers.length-1];
+      //triggers re-render of map to center of latest marker by setting state
       this.setState({
         currentCenter: {
           lat: latestAddedMarker.latLng.lat,
@@ -126,20 +137,22 @@ class GoogleMap extends Component {
 
 
   renderMarkers () {
-    if (this.props.markers) {
+    if (this.props.markers.length > 0) {
+      console.log('props markers more than 0 in render markers');
       const markers = this.props.markers;
       const google = this.props.google;
-      return Object.keys(markers).map(markerKey => {
+      return markers.map(m => {
         const marker = new google.maps.Marker({
-          position: markers[markerKey].latLng,
+          position: m.latLng,
           map: this.map,
         });
         marker.addListener('click', () => {
-          marker.setMap(null);
+          // marker.setMap(null);
           this.props.deleteMarker(marker);
         });
       });
     }
+    console.log('render markers triggered but latest marker length is 0');
   }
 
   render () {
