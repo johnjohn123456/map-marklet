@@ -16,14 +16,14 @@ class App extends Component {
     this.state = {};
   }
 
-  componentWillReceiveProps (nextProps) {
-    //force googlemaps to update when component recieves props from redux store
-    if (nextProps.markers !== this.props.markers) {
-      setTimeout(() => {
-        this.setState({foo:new Date()});
-      }, 200);
-    }
-  }
+  // componentWillReceiveProps (nextProps) {
+  //   //force googlemaps to update when component recieves props from redux store
+  //   if (nextProps.markers !== this.props.markers) {
+  //     setTimeout(() => {
+  //       this.setState({foo:new Date()});
+  //     }, 200);
+  //   }
+  // }
 
   //called when autocomplete field is filled in findCenter() is filled
   //sets the state up for input to Redux store but does not send to store

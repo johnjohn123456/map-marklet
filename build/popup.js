@@ -11912,33 +11912,30 @@ var App = function (_Component) {
     return _this;
   }
 
+  // componentWillReceiveProps (nextProps) {
+  //   //force googlemaps to update when component recieves props from redux store
+  //   if (nextProps.markers !== this.props.markers) {
+  //     setTimeout(() => {
+  //       this.setState({foo:new Date()});
+  //     }, 200);
+  //   }
+  // }
+
+  //called when autocomplete field is filled in findCenter() is filled
+  //sets the state up for input to Redux store but does not send to store
+
+
+  //when a place is selected in the autocomplete field, placeMarker sets the state.
+  //change in state is passed to GoogleMap child component which calls setTempMarker
+
+
+  //dispatches the action
+
+
+  //passed down and called from Marker child component
+
+
   _createClass(App, [{
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(nextProps) {
-      var _this2 = this;
-
-      //force googlemaps to update when component recieves props from redux store
-      if (nextProps.markers !== this.props.markers) {
-        setTimeout(function () {
-          _this2.setState({ foo: new Date() });
-        }, 200);
-      }
-    }
-
-    //called when autocomplete field is filled in findCenter() is filled
-    //sets the state up for input to Redux store but does not send to store
-
-
-    //when a place is selected in the autocomplete field, placeMarker sets the state.
-    //change in state is passed to GoogleMap child component which calls setTempMarker
-
-
-    //dispatches the action
-
-
-    //passed down and called from Marker child component
-
-  }, {
     key: 'render',
     value: function render() {
 
@@ -12115,11 +12112,6 @@ var GoogleMap = function (_Component) {
   }, {
     key: 'componentDidUpdate',
     value: function componentDidUpdate(prevProps, prevState) {
-      //check if props has been updated when app is first loaded
-      if (prevProps.google !== this.props.google) {
-        console.log('when google loaded');
-        this.loadMap();
-      }
       //check if markers have been added or removed in redux store
       if (prevProps.markers !== this.props.markers) {
         console.log('redux store markers array has been modified');
@@ -12131,7 +12123,7 @@ var GoogleMap = function (_Component) {
       //getLatestMarker changes state to focus map around the latest added marker
       //placing temp marker changes state, triggers map to load with center on new temp marker
       if (prevState !== this.state) {
-        console.log('map center of component state was changed');
+        console.log('state was re-set');
         this.loadMap();
       }
     }
@@ -12144,11 +12136,6 @@ var GoogleMap = function (_Component) {
         this.map.panTo(nextProps.latLng);
         this.setTempMarker(nextProps.place, nextProps.latLng);
       }
-      //when ADD_MARKER or DELETE_MARKER is dispatched, re-load the map
-      // if (this.props.markers !== nextProps.markers) {
-      //   console.log('add or delete marker');
-      //   this.loadMap();
-      // }
     }
   }, {
     key: 'loadMap',
@@ -12179,6 +12166,7 @@ var GoogleMap = function (_Component) {
           styles: _styles2.default
         };
         this.map = new maps.Map(node, mapConfig);
+        //render the markers
         this.renderMarkers();
         //add listener for clicks on map to place markers
         this.map.addListener('click', function (e) {
@@ -12194,6 +12182,7 @@ var GoogleMap = function (_Component) {
         var markers = this.props.markers;
         var latestAddedMarker = markers[markers.length - 1];
         //triggers re-render of map to center of latest marker by setting state
+        //setting the state triggers componentDidUpdate which checks for state change, reloading the map
         this.setState({
           currentCenter: {
             lat: latestAddedMarker.latLng.lat,
@@ -12208,7 +12197,7 @@ var GoogleMap = function (_Component) {
       var _this3 = this;
 
       if (this.props.markers.length > 0) {
-        console.log('props markers more than 0 in render markers');
+        console.log('props.markers.length > 0 when rendering markers');
         var markers = this.props.markers;
         var google = this.props.google;
         return markers.map(function (m) {

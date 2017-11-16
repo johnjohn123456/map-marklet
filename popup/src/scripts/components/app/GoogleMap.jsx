@@ -35,11 +35,6 @@ class GoogleMap extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
-    //check if props has been updated when app is first loaded
-    if (prevProps.google !== this.props.google) {
-      console.log('when google loaded');
-      this.loadMap();
-    }
     //check if markers have been added or removed in redux store
     if (prevProps.markers !== this.props.markers) {
       console.log('redux store markers array has been modified');
@@ -51,7 +46,7 @@ class GoogleMap extends Component {
     //getLatestMarker changes state to focus map around the latest added marker
     //placing temp marker changes state, triggers map to load with center on new temp marker
     if (prevState !== this.state) {
-      console.log('map center of component state was changed');
+      console.log('state was re-set');
       this.loadMap();
     }
   }
@@ -63,11 +58,6 @@ class GoogleMap extends Component {
       this.map.panTo(nextProps.latLng);
       this.setTempMarker(nextProps.place, nextProps.latLng);
     }
-    //when ADD_MARKER or DELETE_MARKER is dispatched, re-load the map
-    // if (this.props.markers !== nextProps.markers) {
-    //   console.log('add or delete marker');
-    //   this.loadMap();
-    // }
   }
 
   setTempMarker = (place, latLng) => {
@@ -112,6 +102,7 @@ class GoogleMap extends Component {
         styles: GoogleMapStyles,
       };
       this.map = new maps.Map(node, mapConfig);
+      //render the markers
       this.renderMarkers();
       //add listener for clicks on map to place markers
       this.map.addListener('click', (e) => {
@@ -126,6 +117,7 @@ class GoogleMap extends Component {
       const markers = this.props.markers;
       const latestAddedMarker = markers[markers.length-1];
       //triggers re-render of map to center of latest marker by setting state
+      //setting the state triggers componentDidUpdate which checks for state change, reloading the map
       this.setState({
         currentCenter: {
           lat: latestAddedMarker.latLng.lat,
@@ -138,7 +130,7 @@ class GoogleMap extends Component {
 
   renderMarkers () {
     if (this.props.markers.length > 0) {
-      console.log('props markers more than 0 in render markers');
+      console.log('props.markers.length > 0 when rendering markers');
       const markers = this.props.markers;
       const google = this.props.google;
       return markers.map(m => {
