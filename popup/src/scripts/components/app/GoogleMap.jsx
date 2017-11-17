@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 
 import GoogleMapStyles from './styles.js';
 
-
 import './styles.scss';
 
 class GoogleMap extends Component {
@@ -26,7 +25,7 @@ class GoogleMap extends Component {
 
 
   componentDidMount () {
-    const markers = Object.keys(this.props.markers);
+    const markers = this.props.markers;
     if (markers.length > 0) {
       this.getLatestMarker();
     }
@@ -35,6 +34,11 @@ class GoogleMap extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
+    // if (prevProps.google !== this.props.google) {
+    //   console.log('google maps api is loaded');
+    //   this.loadMap();
+    // }
+
     //check if markers have been added or removed in redux store
     if (prevProps.markers !== this.props.markers) {
       console.log('redux store markers array has been modified');

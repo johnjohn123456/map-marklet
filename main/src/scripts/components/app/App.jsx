@@ -31,20 +31,40 @@ class App extends Component {
 
   componentDidUpdate (prevProps, prevState) {
     if (prevProps.google !== this.props.google) {
+      console.log('google maps api is loaded');
       this.loadMap();
     }
-  }
 
-  componentWillReceiveProps (nextProps) {
-    //force googlemaps to update when component recieves props from redux store
-    if (nextProps.markers !== this.props.markers) {
-      setTimeout(() => {
-        this.setState({foo:new Date()});
-      }, 200);
+    if (prevProps.markers !== this.props.markers) {
+      console.log('change in props.markers');
+      if (prevProps.markers && prevProps.markers.length === 1 && this.props.markers.length === 0) {
+        console.log('last marker deleted');
+        this.loadMap();
+      }
+      if (this.props.google) {
+        console.log('google loaded and markers loaded, added or deleted');
+        this.renderMarkers();
+      }
+    }
+
+    if (prevState !== this.state) {
+      console.log('currentCenter in this.state updated');
+      this.renderMarkers();
     }
   }
 
+  // componentWillReceiveProps (nextProps) {
+  //   //force googlemaps to update when component recieves props from redux store
+  //   if (nextProps.markers !== this.props.markers) {
+  //     console.log('force googlemaps to update by resetting state');
+  //     setTimeout(() => {
+  //       this.setState({foo:new Date()});
+  //     }, 200);
+  //   }
+  // }
+
   loadMap () {
+    console.log('load map');
     if (this.props && this.props.google) {
       //if the google api has loaded into props
       const google = this.props.google;
@@ -63,11 +83,29 @@ class App extends Component {
         styles: GoogleMapStyle,
       };
       this.map = new maps.Map(node, mapConfig);
+      this.getLatestMarker();
+    }
+  }
+
+  getLatestMarker () {
+    if (this.props.markers.length > 0) {
+      console.log('get latest marker will re-set the state');
+      const markers = this.props.markers;
+      const latestAddedMarker = markers[markers.length-1];
+      //triggers re-render of map to center of latest marker by setting state
+      //setting the state triggers componentDidUpdate which checks for state change, reloading the map
+      this.setState({
+        currentCenter: {
+          lat: latestAddedMarker.latLng.lat,
+          lng: latestAddedMarker.latLng.lng,
+        },
+      });
     }
   }
 
   renderMarkers () {
     if (this.props.markers.length > 0) {
+      console.log('markers are rendered');
       const markers = this.props.markers;
       const google = this.props.google;
       return markers.map(m => {
@@ -90,6 +128,7 @@ class App extends Component {
     }
   }
 
+
   render () {
     if (!this.props.loaded) {
       return <div>Loading...</div>;
@@ -97,7 +136,6 @@ class App extends Component {
 
     return (
       <div ref="map" style={mapStyle}>
-        {this.renderMarkers()}
       </div>
     );
   }

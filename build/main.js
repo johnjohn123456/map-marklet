@@ -11859,24 +11859,42 @@ var App = function (_Component) {
     key: 'componentDidUpdate',
     value: function componentDidUpdate(prevProps, prevState) {
       if (prevProps.google !== this.props.google) {
+        console.log('google maps api is loaded');
         this.loadMap();
       }
-    }
-  }, {
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(nextProps) {
-      var _this2 = this;
 
-      //force googlemaps to update when component recieves props from redux store
-      if (nextProps.markers !== this.props.markers) {
-        setTimeout(function () {
-          _this2.setState({ foo: new Date() });
-        }, 200);
+      if (prevProps.markers !== this.props.markers) {
+        console.log('change in props.markers');
+        if (prevProps.markers && prevProps.markers.length === 1 && this.props.markers.length === 0) {
+          console.log('last marker deleted');
+          this.loadMap();
+        }
+        if (this.props.google) {
+          console.log('google loaded and markers loaded, added or deleted');
+          this.renderMarkers();
+        }
+      }
+
+      if (prevState !== this.state) {
+        console.log('currentCenter in this.state updated');
+        this.renderMarkers();
       }
     }
+
+    // componentWillReceiveProps (nextProps) {
+    //   //force googlemaps to update when component recieves props from redux store
+    //   if (nextProps.markers !== this.props.markers) {
+    //     console.log('force googlemaps to update by resetting state');
+    //     setTimeout(() => {
+    //       this.setState({foo:new Date()});
+    //     }, 200);
+    //   }
+    // }
+
   }, {
     key: 'loadMap',
     value: function loadMap() {
+      console.log('load map');
       if (this.props && this.props.google) {
         //if the google api has loaded into props
         var google = this.props.google;
@@ -11898,20 +11916,39 @@ var App = function (_Component) {
           styles: _styles2.default
         };
         this.map = new maps.Map(node, mapConfig);
+        this.getLatestMarker();
+      }
+    }
+  }, {
+    key: 'getLatestMarker',
+    value: function getLatestMarker() {
+      if (this.props.markers.length > 0) {
+        console.log('get latest marker will re-set the state');
+        var markers = this.props.markers;
+        var latestAddedMarker = markers[markers.length - 1];
+        //triggers re-render of map to center of latest marker by setting state
+        //setting the state triggers componentDidUpdate which checks for state change, reloading the map
+        this.setState({
+          currentCenter: {
+            lat: latestAddedMarker.latLng.lat,
+            lng: latestAddedMarker.latLng.lng
+          }
+        });
       }
     }
   }, {
     key: 'renderMarkers',
     value: function renderMarkers() {
-      var _this3 = this;
+      var _this2 = this;
 
       if (this.props.markers.length > 0) {
+        console.log('markers are rendered');
         var markers = this.props.markers;
         var google = this.props.google;
         return markers.map(function (m) {
           var marker = new google.maps.Marker({
             position: m.latLng,
-            map: _this3.map,
+            map: _this2.map,
             title: m.title
           });
 
@@ -11920,7 +11957,7 @@ var App = function (_Component) {
             content: contentString
           });
           marker.addListener('click', function () {
-            infowindow.open(_this3.map, marker);
+            infowindow.open(_this2.map, marker);
           });
         });
       }
@@ -11936,11 +11973,7 @@ var App = function (_Component) {
         );
       }
 
-      return _react2.default.createElement(
-        'div',
-        { ref: 'map', style: mapStyle },
-        this.renderMarkers()
-      );
+      return _react2.default.createElement('div', { ref: 'map', style: mapStyle });
     }
   }]);
 
