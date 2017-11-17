@@ -67,16 +67,25 @@ class App extends Component {
   }
 
   renderMarkers () {
-    if (this.props.markers) {
+    if (this.props.markers.length > 0) {
       const markers = this.props.markers;
-      return Object.keys(markers).map(marker => {
-        return <Marker
-          key={marker}
-          google={this.props.google}
-          marker={markers[marker]}
-          map={this.map}
-          deleteMarker = {this.props.deletemarker}
-        />;
+      const google = this.props.google;
+      return markers.map(m => {
+        const marker = new google.maps.Marker({
+          position: m.latLng,
+          map: this.map,
+          title: m.title,
+        });
+
+        const contentString =
+          `<h2><a href="${m.url}" target="_blank">${m.title}</a></h2>` +
+          `<div>${m.desc}</div>`;
+        const infowindow = new google.maps.InfoWindow({
+          content: contentString,
+        });
+        marker.addListener('click', () => {
+          infowindow.open(this.map, marker);
+        });
       });
     }
   }
@@ -95,10 +104,10 @@ class App extends Component {
 }
 
 App.defaultProps = {
-  zoom: 13,
+  zoom: 8,
   initialCenter: {
-    lat: 51.5073509,
-    lng: -0.12775829999998223,
+    lat: 64.128288,
+    lng: -21.827774,
   },
 };
 

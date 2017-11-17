@@ -11905,15 +11905,22 @@ var App = function (_Component) {
     value: function renderMarkers() {
       var _this3 = this;
 
-      if (this.props.markers) {
+      if (this.props.markers.length > 0) {
         var markers = this.props.markers;
-        return Object.keys(markers).map(function (marker) {
-          return _react2.default.createElement(_Marker2.default, {
-            key: marker,
-            google: _this3.props.google,
-            marker: markers[marker],
+        var google = this.props.google;
+        return markers.map(function (m) {
+          var marker = new google.maps.Marker({
+            position: m.latLng,
             map: _this3.map,
-            deleteMarker: _this3.props.deletemarker
+            title: m.title
+          });
+
+          var contentString = '<h2><a href="' + m.url + '" target="_blank">' + m.title + '</a></h2>' + ('<div>' + m.desc + '</div>');
+          var infowindow = new google.maps.InfoWindow({
+            content: contentString
+          });
+          marker.addListener('click', function () {
+            infowindow.open(_this3.map, marker);
           });
         });
       }
@@ -11941,10 +11948,10 @@ var App = function (_Component) {
 }(_react.Component);
 
 App.defaultProps = {
-  zoom: 13,
+  zoom: 8,
   initialCenter: {
-    lat: 51.5073509,
-    lng: -0.12775829999998223
+    lat: 64.128288,
+    lng: -21.827774
   }
 };
 
