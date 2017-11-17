@@ -12079,7 +12079,6 @@ var GoogleMap = function (_Component) {
         position: latLng
       });
       _this.tempMarker = marker;
-      // this.map.panTo(e.latLng);
       marker.setMap(_this.map);
       //if place is not undefined temp marker was set via autocomplete & parent state is already set
       //only set the parent state if temp marker was set via clicking
@@ -12121,7 +12120,8 @@ var GoogleMap = function (_Component) {
         this.getLatestMarker();
       }
       //getLatestMarker changes state to focus map around the latest added marker
-      //placing temp marker changes state, triggers map to load with center on new temp marker
+      //placing temp marker changes state, triggers map to load with center on new temp marker --not sure...
+      //can re-render markers w/o reloading map?
       if (prevState !== this.state) {
         console.log('state was re-set');
         this.loadMap();
@@ -12206,7 +12206,6 @@ var GoogleMap = function (_Component) {
             map: _this3.map
           });
           marker.addListener('click', function () {
-            // marker.setMap(null);
             _this3.props.deleteMarker(marker);
           });
         });

@@ -44,7 +44,8 @@ class GoogleMap extends Component {
       this.getLatestMarker();
     }
     //getLatestMarker changes state to focus map around the latest added marker
-    //placing temp marker changes state, triggers map to load with center on new temp marker
+    //placing temp marker changes state, triggers map to load with center on new temp marker --not sure...
+    //can re-render markers w/o reloading map?
     if (prevState !== this.state) {
       console.log('state was re-set');
       this.loadMap();
@@ -74,7 +75,6 @@ class GoogleMap extends Component {
       position: latLng,
     });
     this.tempMarker = marker;
-    // this.map.panTo(e.latLng);
     marker.setMap(this.map);
     //if place is not undefined temp marker was set via autocomplete & parent state is already set
     //only set the parent state if temp marker was set via clicking
@@ -139,7 +139,6 @@ class GoogleMap extends Component {
           map: this.map,
         });
         marker.addListener('click', () => {
-          // marker.setMap(null);
           this.props.deleteMarker(marker);
         });
       });
