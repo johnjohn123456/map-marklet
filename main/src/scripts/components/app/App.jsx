@@ -31,24 +31,23 @@ class App extends Component {
 
   componentDidUpdate (prevProps, prevState) {
     if (prevProps.google !== this.props.google) {
-      console.log('google maps api is loaded');
       this.loadMap();
     }
 
     if (prevProps.markers !== this.props.markers) {
-      console.log('change in props.markers');
       if (prevProps.markers && prevProps.markers.length === 1 && this.props.markers.length === 0) {
-        console.log('last marker deleted');
         this.loadMap();
       }
+
       if (this.props.google) {
-        console.log('google loaded and markers loaded, added or deleted');
-        this.renderMarkers();
+        if (prevProps.markers !== this.props.markers) {
+          this.renderMarkers();
+        }
+
       }
     }
 
     if (prevState !== this.state) {
-      console.log('currentCenter in this.state updated');
       this.renderMarkers();
     }
   }
@@ -64,7 +63,6 @@ class App extends Component {
   // }
 
   loadMap () {
-    console.log('load map');
     if (this.props && this.props.google) {
       //if the google api has loaded into props
       const google = this.props.google;
@@ -89,7 +87,6 @@ class App extends Component {
 
   getLatestMarker () {
     if (this.props.markers.length > 0) {
-      console.log('get latest marker will re-set the state');
       const markers = this.props.markers;
       const latestAddedMarker = markers[markers.length-1];
       //triggers re-render of map to center of latest marker by setting state
@@ -105,29 +102,38 @@ class App extends Component {
 
   renderMarkers () {
     if (this.props.markers.length > 0) {
-      console.log('markers are rendered');
+
+      //remove all markers from map before resetting them again
+      if (this.markers) this.markers.forEach(m => m.setMap(null));
+
+      this.markers = [];
+
       const markers = this.props.markers;
       const google = this.props.google;
-      return markers.map(m => {
+
+      markers.map(m => {
         const marker = new google.maps.Marker({
           position: m.latLng,
-          map: this.map,
           title: m.title,
         });
 
         const contentString =
           `<h2><a href="${m.url}" target="_blank">${m.title}</a></h2>` +
           `<div>${m.desc}</div>`;
+
         const infowindow = new google.maps.InfoWindow({
           content: contentString,
         });
+
         marker.addListener('click', () => {
           infowindow.open(this.map, marker);
         });
+
+        this.markers.push(marker);
       });
+      return this.markers.forEach(m => m.setMap(this.map));
     }
   }
-
 
   render () {
     if (!this.props.loaded) {

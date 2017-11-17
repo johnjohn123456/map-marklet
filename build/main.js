@@ -11859,24 +11859,22 @@ var App = function (_Component) {
     key: 'componentDidUpdate',
     value: function componentDidUpdate(prevProps, prevState) {
       if (prevProps.google !== this.props.google) {
-        console.log('google maps api is loaded');
         this.loadMap();
       }
 
       if (prevProps.markers !== this.props.markers) {
-        console.log('change in props.markers');
         if (prevProps.markers && prevProps.markers.length === 1 && this.props.markers.length === 0) {
-          console.log('last marker deleted');
           this.loadMap();
         }
+
         if (this.props.google) {
-          console.log('google loaded and markers loaded, added or deleted');
-          this.renderMarkers();
+          if (prevProps.markers !== this.props.markers) {
+            this.renderMarkers();
+          }
         }
       }
 
       if (prevState !== this.state) {
-        console.log('currentCenter in this.state updated');
         this.renderMarkers();
       }
     }
@@ -11894,7 +11892,6 @@ var App = function (_Component) {
   }, {
     key: 'loadMap',
     value: function loadMap() {
-      console.log('load map');
       if (this.props && this.props.google) {
         //if the google api has loaded into props
         var google = this.props.google;
@@ -11923,7 +11920,6 @@ var App = function (_Component) {
     key: 'getLatestMarker',
     value: function getLatestMarker() {
       if (this.props.markers.length > 0) {
-        console.log('get latest marker will re-set the state');
         var markers = this.props.markers;
         var latestAddedMarker = markers[markers.length - 1];
         //triggers re-render of map to center of latest marker by setting state
@@ -11942,23 +11938,37 @@ var App = function (_Component) {
       var _this2 = this;
 
       if (this.props.markers.length > 0) {
-        console.log('markers are rendered');
+
+        //remove all markers from map before resetting them again
+        if (this.markers) this.markers.forEach(function (m) {
+          return m.setMap(null);
+        });
+
+        this.markers = [];
+
         var markers = this.props.markers;
         var google = this.props.google;
-        return markers.map(function (m) {
+
+        markers.map(function (m) {
           var marker = new google.maps.Marker({
             position: m.latLng,
-            map: _this2.map,
             title: m.title
           });
 
           var contentString = '<h2><a href="' + m.url + '" target="_blank">' + m.title + '</a></h2>' + ('<div>' + m.desc + '</div>');
+
           var infowindow = new google.maps.InfoWindow({
             content: contentString
           });
+
           marker.addListener('click', function () {
             infowindow.open(_this2.map, marker);
           });
+
+          _this2.markers.push(marker);
+        });
+        return this.markers.forEach(function (m) {
+          return m.setMap(_this2.map);
         });
       }
     }
