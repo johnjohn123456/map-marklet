@@ -25,7 +25,6 @@ class GoogleMap extends Component {
 
 
   componentDidMount () {
-    console.log('component did mount');
     const markers = this.props.markers;
     if (markers.length > 0) {
       this.getLatestMarker();
@@ -57,17 +56,18 @@ class GoogleMap extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    //conditional to ensure that only the place change event in autocomplete is re-setting latLng in App.jsx
+    //conditional to ensure autocomplete is re-setting latLng in App.jsx
     //otherwise props will change when temp marker is set via clicking
     if (this.props.latLng !== nextProps.latLng) {
       this.map.panTo(nextProps.latLng);
-      this.setTempMarker(nextProps.place, nextProps.latLng);
+      //place tempMarker only if there isn't already a tempMarker set by clicking on the map
+      if (!this.tempMarker) this.setTempMarker(nextProps.place, nextProps.latLng);
     }
   }
 
   setTempMarker = (place, latLng) => {
     //if the google api has loaded into props
-    const {google} = this.props;
+    const google = this.props.google;
     const maps = google.maps;
 
     if (this.tempMarker && this.tempMarker.setMap) {
@@ -75,11 +75,11 @@ class GoogleMap extends Component {
       this.tempMarker.setMap(null);
     }
     const date = new Date();
-    //refactor to this.tempMarker = new maps.Marker(...)
+
     this.tempMarker = new maps.Marker({
       position: latLng,
     });
-    // this.tempMarker = marker;
+
     this.tempMarker.setMap(this.map);
     //if place is not undefined temp marker was set via autocomplete & parent state is already set
     //only set the parent state if temp marker was set via clicking
@@ -88,10 +88,8 @@ class GoogleMap extends Component {
 
   loadMap () {
     if (this.props && this.props.google) {
-      console.log('load map called');
-      console.log('---------------------------------');
       //if the google api has loaded into props
-      const {google} = this.props;
+      const google = this.props.google;
       const maps = google.maps;
 
       //reference to GoogleMap's div node
@@ -119,7 +117,6 @@ class GoogleMap extends Component {
 
   getLatestMarker () {
     if (this.props.markers.length > 0) {
-      console.log('get latest marker');
       const markers = this.props.markers;
       const latestAddedMarker = markers[markers.length-1];
       this.setState({
@@ -134,8 +131,8 @@ class GoogleMap extends Component {
 
   renderMarkers () {
     if (this.props.markers) {
-      if (this.tempMarker) this.tempMarker.setMap(null)
-      //remove markers from map before resetting them again
+
+      if (this.tempMarker) this.tempMarker.setMap(null);
       if (this.markers) this.markers.forEach(m => m.setMap(null));
 
       this.markers = [];
@@ -154,6 +151,7 @@ class GoogleMap extends Component {
 
         this.markers.push(marker);
       });
+
       return this.markers.forEach(m => m.setMap(this.map));
     }
   }

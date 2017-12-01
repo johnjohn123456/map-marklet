@@ -11873,17 +11873,6 @@ var App = function (_Component) {
         this.renderMarkers();
       }
     }
-
-    // componentWillReceiveProps (nextProps) {
-    //   //force googlemaps to update when component recieves props from redux store
-    //   if (nextProps.markers !== this.props.markers) {
-    //     console.log('force googlemaps to update by resetting state');
-    //     setTimeout(() => {
-    //       this.setState({foo:new Date()});
-    //     }, 200);
-    //   }
-    // }
-
   }, {
     key: 'loadMap',
     value: function loadMap() {

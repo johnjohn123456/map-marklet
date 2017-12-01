@@ -11864,13 +11864,10 @@ var App = function (_Component) {
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
     _this.placeMarker = function (place, latLng, date) {
-      console.log('place marker in APP called');
       _this.setState({
         place: place,
         latLng: latLng,
         date: date.toString()
-      }, function () {
-        return console.log('APP state re-set');
       });
     };
 
@@ -11914,15 +11911,6 @@ var App = function (_Component) {
     _this.state = {};
     return _this;
   }
-
-  // componentWillReceiveProps (nextProps) {
-  //   //force googlemaps to update when component recieves props from redux store
-  //   if (nextProps.markers !== this.props.markers) {
-  //     setTimeout(() => {
-  //       this.setState({foo:new Date()});
-  //     }, 200);
-  //   }
-  // }
 
   //called when autocomplete field is filled in findCenter() is filled
   //sets the state up for input to Redux store but does not send to store
@@ -12070,7 +12058,6 @@ var GoogleMap = function (_Component) {
     _this.setTempMarker = function (place, latLng) {
       //if the google api has loaded into props
       var google = _this.props.google;
-
       var maps = google.maps;
 
       if (_this.tempMarker && _this.tempMarker.setMap) {
@@ -12078,11 +12065,11 @@ var GoogleMap = function (_Component) {
         _this.tempMarker.setMap(null);
       }
       var date = new Date();
-      //refactor to this.tempMarker = new maps.Marker(...)
+
       _this.tempMarker = new maps.Marker({
         position: latLng
       });
-      // this.tempMarker = marker;
+
       _this.tempMarker.setMap(_this.map);
       //if place is not undefined temp marker was set via autocomplete & parent state is already set
       //only set the parent state if temp marker was set via clicking
@@ -12105,7 +12092,6 @@ var GoogleMap = function (_Component) {
   _createClass(GoogleMap, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      console.log('component did mount');
       var markers = this.props.markers;
       if (markers.length > 0) {
         this.getLatestMarker();
@@ -12139,11 +12125,12 @@ var GoogleMap = function (_Component) {
   }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
-      //conditional to ensure that only the place change event in autocomplete is re-setting latLng in App.jsx
+      //conditional to ensure autocomplete is re-setting latLng in App.jsx
       //otherwise props will change when temp marker is set via clicking
       if (this.props.latLng !== nextProps.latLng) {
         this.map.panTo(nextProps.latLng);
-        this.setTempMarker(nextProps.place, nextProps.latLng);
+        //place tempMarker only if there isn't already a tempMarker set by clicking on the map
+        if (!this.tempMarker) this.setTempMarker(nextProps.place, nextProps.latLng);
       }
     }
   }, {
@@ -12152,11 +12139,8 @@ var GoogleMap = function (_Component) {
       var _this2 = this;
 
       if (this.props && this.props.google) {
-        console.log('load map called');
-        console.log('---------------------------------');
         //if the google api has loaded into props
         var google = this.props.google;
-
         var maps = google.maps;
 
         //reference to GoogleMap's div node
@@ -12188,7 +12172,6 @@ var GoogleMap = function (_Component) {
     key: 'getLatestMarker',
     value: function getLatestMarker() {
       if (this.props.markers.length > 0) {
-        console.log('get latest marker');
         var markers = this.props.markers;
         var latestAddedMarker = markers[markers.length - 1];
         this.setState({
@@ -12205,8 +12188,8 @@ var GoogleMap = function (_Component) {
       var _this3 = this;
 
       if (this.props.markers) {
+
         if (this.tempMarker) this.tempMarker.setMap(null);
-        //remove markers from map before resetting them again
         if (this.markers) this.markers.forEach(function (m) {
           return m.setMap(null);
         });
@@ -12227,6 +12210,7 @@ var GoogleMap = function (_Component) {
 
           _this3.markers.push(marker);
         });
+
         return this.markers.forEach(function (m) {
           return m.setMap(_this3.map);
         });
