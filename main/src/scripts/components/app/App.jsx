@@ -10,12 +10,6 @@ import GoogleMapStyle from './styles';
 import './styles.scss';
 
 
-const mapStyle = {
-  width: '100vw',
-  height: '100vh',
-  backgroundColor :'green',
-};
-
 class App extends Component {
   constructor (props) {
     super(props);
@@ -35,19 +29,19 @@ class App extends Component {
     }
 
     if (prevProps.markers !== this.props.markers) {
-      if (prevProps.markers && prevProps.markers.length === 1 && this.props.markers.length === 0) {
-        this.loadMap();
-      }
-
       if (this.props.google) {
-        if (prevProps.markers !== this.props.markers) {
+        //getLatestMarker ressets state, change in state calls renderMarkers
+        if (this.props.markers.length === 0) {
           this.renderMarkers();
+        } else {
+          this.getLatestMarker();
         }
-
       }
     }
 
     if (prevState !== this.state) {
+      //loadMap calles getLatestMarker which sets state to its latLng
+      this.map.panTo(this.state.currentCenter);
       this.renderMarkers();
     }
   }
@@ -101,8 +95,7 @@ class App extends Component {
   }
 
   renderMarkers () {
-    if (this.props.markers.length > 0) {
-
+    if (this.props.markers) {
       //remove all markers from map before resetting them again
       if (this.markers) this.markers.forEach(m => m.setMap(null));
 
@@ -141,7 +134,7 @@ class App extends Component {
     }
 
     return (
-      <div ref="map" style={mapStyle}>
+      <div ref="map" className="mapStyle">
       </div>
     );
   }

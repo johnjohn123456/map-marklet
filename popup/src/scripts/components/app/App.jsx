@@ -28,11 +28,12 @@ class App extends Component {
   //called when autocomplete field is filled in findCenter() is filled
   //sets the state up for input to Redux store but does not send to store
   placeMarker = (place, latLng, date) => {
+    console.log('place marker in APP called');
     this.setState({
       place: place,
       latLng: latLng,
       date: date.toString(),
-    });
+    }, ()=>console.log('APP state re-set'));
   }
 
   //when a place is selected in the autocomplete field, placeMarker sets the state.

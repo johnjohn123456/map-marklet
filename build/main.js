@@ -11828,12 +11828,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //main
 
 
-var mapStyle = {
-  width: '100vw',
-  height: '100vh',
-  backgroundColor: 'green'
-};
-
 var App = function (_Component) {
   _inherits(App, _Component);
 
@@ -11863,18 +11857,19 @@ var App = function (_Component) {
       }
 
       if (prevProps.markers !== this.props.markers) {
-        if (prevProps.markers && prevProps.markers.length === 1 && this.props.markers.length === 0) {
-          this.loadMap();
-        }
-
         if (this.props.google) {
-          if (prevProps.markers !== this.props.markers) {
+          //getLatestMarker ressets state, change in state calls renderMarkers
+          if (this.props.markers.length === 0) {
             this.renderMarkers();
+          } else {
+            this.getLatestMarker();
           }
         }
       }
 
       if (prevState !== this.state) {
+        //loadMap calles getLatestMarker which sets state to its latLng
+        this.map.panTo(this.state.currentCenter);
         this.renderMarkers();
       }
     }
@@ -11937,8 +11932,7 @@ var App = function (_Component) {
     value: function renderMarkers() {
       var _this2 = this;
 
-      if (this.props.markers.length > 0) {
-
+      if (this.props.markers) {
         //remove all markers from map before resetting them again
         if (this.markers) this.markers.forEach(function (m) {
           return m.setMap(null);
@@ -11983,7 +11977,7 @@ var App = function (_Component) {
         );
       }
 
-      return _react2.default.createElement('div', { ref: 'map', style: mapStyle });
+      return _react2.default.createElement('div', { ref: 'map', className: 'mapStyle' });
     }
   }]);
 
@@ -13130,7 +13124,7 @@ exports = module.exports = __webpack_require__(124)(undefined);
 
 
 // module
-exports.push([module.i, "h2 a {\n  color: red; }\n", ""]);
+exports.push([module.i, "h2 a {\n  color: red; }\n\n.mapStyle {\n  width: 100vw;\n  height: 100vh;\n  margin: 0; }\n", ""]);
 
 // exports
 

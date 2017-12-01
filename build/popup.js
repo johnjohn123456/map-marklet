@@ -11864,10 +11864,13 @@ var App = function (_Component) {
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
     _this.placeMarker = function (place, latLng, date) {
+      console.log('place marker in APP called');
       _this.setState({
         place: place,
         latLng: latLng,
         date: date.toString()
+      }, function () {
+        return console.log('APP state re-set');
       });
     };
 
@@ -12075,11 +12078,12 @@ var GoogleMap = function (_Component) {
         _this.tempMarker.setMap(null);
       }
       var date = new Date();
-      var marker = new maps.Marker({
+      //refactor to this.tempMarker = new maps.Marker(...)
+      _this.tempMarker = new maps.Marker({
         position: latLng
       });
-      _this.tempMarker = marker;
-      marker.setMap(_this.map);
+      // this.tempMarker = marker;
+      _this.tempMarker.setMap(_this.map);
       //if place is not undefined temp marker was set via autocomplete & parent state is already set
       //only set the parent state if temp marker was set via clicking
       if (!place) _this.props.placeMarker(null, latLng, date);
@@ -12101,35 +12105,35 @@ var GoogleMap = function (_Component) {
   _createClass(GoogleMap, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
+      console.log('component did mount');
       var markers = this.props.markers;
       if (markers.length > 0) {
         this.getLatestMarker();
       }
-      console.log('component did mount');
       this.loadMap();
     }
   }, {
     key: 'componentDidUpdate',
     value: function componentDidUpdate(prevProps, prevState) {
-      // if (prevProps.google !== this.props.google) {
-      //   console.log('google maps api is loaded');
-      //   this.loadMap();
-      // }
-
-      //check if markers have been added or removed in redux store
-      if (prevProps.markers !== this.props.markers) {
-        console.log('redux store markers array has been modified');
-        if (this.props.markers.length === 0) {
-          this.loadMap();
-        }
-        this.getLatestMarker();
-      }
-      //getLatestMarker changes state to focus map around the latest added marker
-      //placing temp marker changes state, triggers map to load with center on new temp marker --not sure...
-      //can re-render markers w/o reloading map?
-      if (prevState !== this.state) {
-        console.log('state was re-set');
+      if (prevProps.google !== this.props.google) {
         this.loadMap();
+      }
+
+      if (prevProps.markers !== this.props.markers) {
+        if (this.props.google) {
+          if (this.props.markers.length === 0) {
+            //remove the last marker
+            this.renderMarkers();
+          } else {
+            this.getLatestMarker();
+          }
+        }
+      }
+
+      if (prevState !== this.state) {
+        //loadMap calles getLatestMarker which sets state to its latLng
+        this.map.panTo(this.state.currentCenter);
+        this.renderMarkers();
       }
     }
   }, {
@@ -12149,6 +12153,7 @@ var GoogleMap = function (_Component) {
 
       if (this.props && this.props.google) {
         console.log('load map called');
+        console.log('---------------------------------');
         //if the google api has loaded into props
         var google = this.props.google;
 
@@ -12172,7 +12177,7 @@ var GoogleMap = function (_Component) {
         };
         this.map = new maps.Map(node, mapConfig);
         //render the markers
-        this.renderMarkers();
+        this.getLatestMarker();
         //add listener for clicks on map to place markers
         this.map.addListener('click', function (e) {
           _this2.setTempMarker(null, e.latLng);
@@ -12186,8 +12191,6 @@ var GoogleMap = function (_Component) {
         console.log('get latest marker');
         var markers = this.props.markers;
         var latestAddedMarker = markers[markers.length - 1];
-        //triggers re-render of map to center of latest marker by setting state
-        //setting the state triggers componentDidUpdate which checks for state change, reloading the map
         this.setState({
           currentCenter: {
             lat: latestAddedMarker.latLng.lat,
@@ -12201,21 +12204,33 @@ var GoogleMap = function (_Component) {
     value: function renderMarkers() {
       var _this3 = this;
 
-      if (this.props.markers.length > 0) {
-        console.log('props.markers.length > 0 when rendering markers');
+      if (this.props.markers) {
+        if (this.tempMarker) this.tempMarker.setMap(null);
+        //remove markers from map before resetting them again
+        if (this.markers) this.markers.forEach(function (m) {
+          return m.setMap(null);
+        });
+
+        this.markers = [];
+
         var markers = this.props.markers;
         var google = this.props.google;
-        return markers.map(function (m) {
+
+        markers.map(function (m) {
           var marker = new google.maps.Marker({
-            position: m.latLng,
-            map: _this3.map
+            position: m.latLng
           });
+
           marker.addListener('click', function () {
             _this3.props.deleteMarker(marker);
           });
+
+          _this3.markers.push(marker);
+        });
+        return this.markers.forEach(function (m) {
+          return m.setMap(_this3.map);
         });
       }
-      console.log('render markers triggered but latest marker length is 0');
     }
   }, {
     key: 'render',
