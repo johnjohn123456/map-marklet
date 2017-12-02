@@ -1179,9 +1179,6 @@ var store = (0, _redux.createStore)(_reducers2.default, persistedState, (0, _red
 store.subscribe(function () {
   (0, _localStorage.saveState)({
     markers: store.getState().markers
-  }, function () {
-    //eslint-disable-next-line
-    console.log(store.getState());
   });
 });
 

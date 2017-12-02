@@ -18,9 +18,6 @@ const store = createStore(
 store.subscribe(() => {
   saveState({
     markers: store.getState().markers,
-  }, () => {
-    //eslint-disable-next-line
-    console.log(store.getState());
   });
 });
 
