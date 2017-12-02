@@ -94,8 +94,8 @@ class App extends Component {
           placeholder="find location"
         />
 
-        <textarea id="desc" />
-        <textarea id="pic" />
+        <textarea placeholder="What's great about this location?" id="desc" />
+        <textarea placeholder="See an image you like? Paste its url here." id="pic" />
 
         <button onClick={this.addMarker}>Add Marker</button>
 
