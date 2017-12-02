@@ -42,11 +42,13 @@ class App extends Component {
   //dispatches the action
   addMarker = () => {
     const desc = document.getElementById('desc').value;
+    const pic = document.getElementById('pic').value;
     chrome.tabs.getSelected(null, tab => {
       this.props.addMarker({
         url: tab.url,
         title: tab.title,
         desc: desc,
+        pic: pic,
         place: this.state.place,
         latLng: this.state.latLng,
         date: this.state.date,
@@ -93,6 +95,7 @@ class App extends Component {
         />
 
         <textarea id="desc" />
+        <textarea id="pic" />
 
         <button onClick={this.addMarker}>Add Marker</button>
 
@@ -112,6 +115,7 @@ const mapDispatchToProps = (dispatch) => ({
       url: marker.url,
       title: marker.title,
       desc: marker.desc,
+      pic: marker.pic,
       place: marker.place,
       latLng: marker.latLng,
       date: marker.date,

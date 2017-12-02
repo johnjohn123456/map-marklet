@@ -11938,8 +11938,7 @@ var App = function (_Component) {
             title: m.title
           });
 
-          var contentString = '<h2><a href="' + m.url + '" target="_blank">' + m.title + '</a></h2>' + ('<div>' + m.desc + '</div>');
-          //<img src="${m.img}" style="width:300px">
+          var contentString = '<h2><a href="' + m.url + '" target="_blank">' + m.title + '</a></h2>' + ('<div>' + m.desc + '</div>') + ('<img src="' + m.pic + '" style="width:300px">');
 
           var infowindow = new google.maps.InfoWindow({
             content: contentString
