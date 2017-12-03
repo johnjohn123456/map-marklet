@@ -3,7 +3,6 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
 import {GoogleApiWrapper} from 'google-maps-react';
-// import SnazzyInfoWindow from 'snazzy-info-window';
 
 import Marker from './Marker';
 import GoogleMapStyle from './styles';
@@ -117,6 +116,7 @@ class App extends Component {
 
         const infowindow = new google.maps.InfoWindow({
           content: contentString,
+          maxWidth: 500,
         });
 
         marker.addListener('click', () => {

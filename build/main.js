@@ -11827,7 +11827,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //main
 
-// import SnazzyInfoWindow from 'snazzy-info-window';
 
 var App = function (_Component) {
   _inherits(App, _Component);
@@ -11942,7 +11941,8 @@ var App = function (_Component) {
           var contentString = '<div class="iw-container">' + '<div class="iw-title">' + ('<h2><a href="' + m.url + '" target="_blank">' + m.title + '</a></h2>') + '</div>' + '<div class="iw-body">' + ('<img src="' + m.pic + '">') + ('<div class="iw-desc">' + m.desc + '</div>') + '</div>' + '</div>';
 
           var infowindow = new google.maps.InfoWindow({
-            content: contentString
+            content: contentString,
+            maxWidth: 500
           });
 
           marker.addListener('click', function () {
