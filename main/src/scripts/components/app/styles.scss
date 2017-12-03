@@ -1,5 +1,14 @@
+h2 {
+  margin: 0;
+}
+
 h2 a{
-  color: red;
+  color: #333;
+  text-decoration: none;
+}
+
+img {
+  width: 500px;
 }
 
 .mapStyle {
@@ -7,3 +16,7 @@ h2 a{
   height: 100vh;
   margin: 0;
 }
+
+//constrain infowindow size
+//float image right of text, if no image, expand text to fill infowindow
+//round borders of infowindow

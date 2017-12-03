@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
 import {GoogleApiWrapper} from 'google-maps-react';
+// import SnazzyInfoWindow from 'snazzy-info-window';
 
 import Marker from './Marker';
 import GoogleMapStyle from './styles';
@@ -101,9 +102,18 @@ class App extends Component {
         });
 
         const contentString =
-          `<h2><a href="${m.url}" target="_blank">${m.title}</a></h2>` +
-          `<div>${m.desc}</div>` +
-          `<img src="${m.pic}" style="width:300px">`;
+          '<div class="iw-container">' +
+
+            '<div class="iw-title">' +
+              `<h2><a href="${m.url}" target="_blank">${m.title}</a></h2>` +
+            '</div>' +
+
+            '<div class="iw-body">' +
+              `<img src="${m.pic}">` +
+              `<div class="iw-desc">${m.desc}</div>` +
+            '</div>' +
+
+          '</div>';
 
         const infowindow = new google.maps.InfoWindow({
           content: contentString,
