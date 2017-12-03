@@ -13114,7 +13114,7 @@ exports = module.exports = __webpack_require__(124)(undefined);
 
 
 // module
-exports.push([module.i, "h2 {\n  margin: 0; }\n\nh2 a {\n  color: #333;\n  text-decoration: none; }\n\nimg {\n  width: 500px; }\n\n.mapStyle {\n  width: 100vw;\n  height: 100vh;\n  margin: 0; }\n", ""]);
+exports.push([module.i, "h2 {\n  margin: 0; }\n\nh2 a {\n  color: #333;\n  text-decoration: none; }\n\nimg {\n  width: 500px; }\n\n.mapStyle {\n  width: 100vw;\n  height: 100vh;\n  margin: 0; }\n\n.gm-style-iw {\n  margin-left: 10px; }\n\n.iw-title {\n  margin: 5px 0 10px 0; }\n\n.iw-desc {\n  margin-top: 10px;\n  font-size: 1.2em; }\n", ""]);
 
 // exports
 

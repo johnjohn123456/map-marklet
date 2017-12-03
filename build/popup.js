@@ -11957,8 +11957,8 @@ var App = function (_Component) {
           onKeyPress: this.findCenter,
           placeholder: 'find location'
         }),
-        _react2.default.createElement('textarea', { id: 'desc' }),
-        _react2.default.createElement('textarea', { id: 'pic' }),
+        _react2.default.createElement('textarea', { id: 'desc', placeholder: 'What\'s at this location?' }),
+        _react2.default.createElement('textarea', { id: 'pic', placeholder: 'Add an image by placing its url here...' }),
         _react2.default.createElement(
           'button',
           { onClick: this.addMarker },
@@ -13282,7 +13282,7 @@ exports = module.exports = __webpack_require__(125)(undefined);
 
 
 // module
-exports.push([module.i, "body {\n  background-color: #ebe3cd;\n  margin: 0; }\n\nbutton {\n  background-color: #a5b076;\n  color: #fff;\n  border: none;\n  width: 100vw;\n  height: 40px; }\n\n.mapStyle {\n  width: 550px;\n  height: 450px;\n  margin: 0; }\n\n.app {\n  width: 550px;\n  height: 500px; }\n\n#findCenter {\n  position: absolute;\n  height: 24px;\n  width: 300px;\n  top: 10px;\n  left: 120px; }\n\n#desc {\n  width: 98.8vw;\n  height: 60px;\n  font-size: 1.2em; }\n\n#pic {\n  width: 98.8vw;\n  height: 60px;\n  font-size: 1.2em; }\n", ""]);
+exports.push([module.i, "body {\n  background-color: #ebe3cd;\n  margin: 0; }\n\nbutton {\n  background-color: #a5b076;\n  color: #fff;\n  border: none;\n  width: 100vw;\n  height: 40px; }\n\n.mapStyle {\n  width: 550px;\n  height: 450px;\n  margin: 0; }\n\n.app {\n  width: 550px;\n  height: 500px; }\n\n#findCenter {\n  position: absolute;\n  height: 24px;\n  width: 300px;\n  top: 10px;\n  left: 120px; }\n\n#desc {\n  width: 98.8vw;\n  height: 60px;\n  font-size: 1.2em; }\n\n#pic {\n  width: 98.8vw;\n  height: 20px;\n  font-size: 1.2em; }\n", ""]);
 
 // exports
 

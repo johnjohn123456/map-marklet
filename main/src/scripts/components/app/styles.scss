@@ -11,12 +11,25 @@ img {
   width: 500px;
 }
 
+
 .mapStyle {
   width: 100vw;
   height: 100vh;
   margin: 0;
 }
 
+.gm-style-iw {
+  margin-left: 10px;
+}
+
+.iw-title {
+  margin: 5px 0 10px 0;
+}
+
+.iw-desc {
+  margin-top: 10px;
+  font-size: 1.2em;
+}
 //constrain infowindow size
 //float image right of text, if no image, expand text to fill infowindow
 //round borders of infowindow
