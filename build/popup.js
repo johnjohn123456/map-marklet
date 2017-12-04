@@ -11826,6 +11826,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(11);
@@ -11847,6 +11849,8 @@ var _GoogleMap2 = _interopRequireDefault(_GoogleMap);
 __webpack_require__(118);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -11872,7 +11876,7 @@ var App = function (_Component) {
     };
 
     _this.findCenter = function (e) {
-      var savedEvent = e;
+      //const savedEvent = e;
       var findCenterInputRef = _this.refs.findCenter;
       var input = _reactDom2.default.findDOMNode(findCenterInputRef);
       var autocomplete = new google.maps.places.Autocomplete(input);
@@ -11884,19 +11888,21 @@ var App = function (_Component) {
     };
 
     _this.addMarker = function () {
-      var desc = document.getElementById('desc').value;
-      var pic = document.getElementById('pic').value;
-      chrome.tabs.getSelected(null, function (tab) {
-        _this.props.addMarker({
-          url: tab.url,
-          title: tab.title,
-          desc: desc,
-          pic: pic,
-          place: _this.state.place,
-          latLng: _this.state.latLng,
-          date: _this.state.date
+      if (_this.state.latLng) {
+        var desc = document.getElementById('desc').value;
+        var pic = document.getElementById('pic').value;
+        chrome.tabs.getSelected(null, function (tab) {
+          _this.props.addMarker({
+            url: tab.url,
+            title: tab.title,
+            desc: desc,
+            pic: pic,
+            place: _this.state.place,
+            latLng: _this.state.latLng,
+            date: _this.state.date
+          });
         });
-      });
+      }
     };
 
     _this.deleteMarker = function (marker) {
@@ -11910,27 +11916,55 @@ var App = function (_Component) {
       _this.props.deleteMarker(marker);
     };
 
-    _this.state = {};
+    _this.updateTextArea = function (id, e) {
+      _this.setState({
+        textArea: _extends({}, _this.state.textArea, _defineProperty({}, id, e.target.value))
+      }, function () {
+        window.localStorage.setItem(id, _this.state.textArea[id]);
+      });
+    };
+
+    _this.state = {
+      textArea: {}
+    };
     return _this;
   }
 
-  //called when autocomplete field is filled in findCenter() is filled
-  //sets the state up for input to Redux store but does not send to store
-
-
-  //when a place is selected in the autocomplete field, placeMarker sets the state.
-  //change in state is passed to GoogleMap child component which calls setTempMarker
-
-
-  //dispatches the action
-
-
-  //passed down and called from Marker child component
-
-
   _createClass(App, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      var desc = window.localStorage.getItem('desc');
+      var pic = window.localStorage.getItem('pic');
+
+      this.setState({
+        textArea: {
+          desc: desc ? desc : '',
+          pic: pic ? pic : ''
+        }
+      }, function () {
+        return console.log(_this2.state.textArea);
+      });
+    }
+
+    //called when autocomplete field is filled in findCenter() is filled
+    //sets the state up for input to Redux store but does not send to store
+
+
+    //when a place is selected in the autocomplete field, placeMarker sets the state.
+    //change in state is passed to GoogleMap child component which calls setTempMarker
+
+
+    //dispatches the action
+
+
+    //passed down and called from Marker child component
+
+  }, {
     key: 'render',
     value: function render() {
+      var _this3 = this;
 
       if (!this.props.loaded) {
         return _react2.default.createElement(
@@ -11957,8 +11991,12 @@ var App = function (_Component) {
           onKeyPress: this.findCenter,
           placeholder: 'find location'
         }),
-        _react2.default.createElement('textarea', { id: 'desc', placeholder: 'What\'s at this location?' }),
-        _react2.default.createElement('textarea', { id: 'pic', placeholder: 'Add an image by placing its url here...' }),
+        _react2.default.createElement('textarea', { id: 'desc', value: this.state.textArea.desc, onChange: function onChange(e) {
+            return _this3.updateTextArea('desc', e);
+          }, placeholder: 'Add an desc by placing its url here...' }),
+        _react2.default.createElement('textarea', { id: 'pic', value: this.state.textArea.pic, onChange: function onChange(e) {
+            return _this3.updateTextArea('pic', e);
+          }, placeholder: 'Add a pic by placing its url here...' }),
         _react2.default.createElement(
           'button',
           { onClick: this.addMarker },
@@ -13282,7 +13320,7 @@ exports = module.exports = __webpack_require__(125)(undefined);
 
 
 // module
-exports.push([module.i, "body {\n  background-color: #ebe3cd;\n  margin: 0; }\n\nbutton {\n  background-color: #a5b076;\n  color: #fff;\n  border: none;\n  width: 100vw;\n  height: 40px; }\n\n.mapStyle {\n  width: 550px;\n  height: 450px;\n  margin: 0; }\n\n.app {\n  width: 550px;\n  height: 500px; }\n\n#findCenter {\n  position: absolute;\n  height: 24px;\n  width: 300px;\n  top: 10px;\n  left: 120px; }\n\n#desc {\n  width: 98.8vw;\n  height: 60px;\n  font-size: 1.2em; }\n\n#pic {\n  width: 98.8vw;\n  height: 20px;\n  font-size: 1.2em; }\n", ""]);
+exports.push([module.i, "body {\n  background-color: #ebe3cd;\n  margin: 0; }\n\nbutton {\n  background-color: #a5b076;\n  color: #fff;\n  border: none;\n  width: 100vw;\n  height: 40px; }\n\n.mapStyle {\n  width: 550px;\n  height: 450px;\n  margin: 0; }\n\n.app {\n  width: 550px;\n  height: 500px; }\n\n#findCenter {\n  position: absolute;\n  height: 24px;\n  width: 300px;\n  top: 10px;\n  left: 120px; }\n\n#desc {\n  width: 98.8vw;\n  height: 60px;\n  font-size: 1.2em; }\n\n#pic {\n  width: 98.8vw;\n  height: 40px;\n  font-size: 1.2em; }\n", ""]);
 
 // exports
 

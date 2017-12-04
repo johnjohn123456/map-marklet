@@ -12,7 +12,21 @@ import './styles.scss';
 class App extends Component {
   constructor (props) {
     super(props);
-    this.state = {};
+    this.state = {
+      textArea: {},
+    };
+  }
+
+  componentDidMount () {
+    const desc = window.localStorage.getItem('desc');
+    const pic = window.localStorage.getItem('pic');
+
+    this.setState({
+      textArea: {
+        desc: desc ? desc : '',
+        pic: pic ? pic : '',
+      },
+    },()=>console.log(this.state.textArea));
   }
 
   //called when autocomplete field is filled in findCenter() is filled
@@ -28,7 +42,7 @@ class App extends Component {
   //when a place is selected in the autocomplete field, placeMarker sets the state.
   //change in state is passed to GoogleMap child component which calls setTempMarker
   findCenter = (e) => {
-    const savedEvent = e;
+    //const savedEvent = e;
     const findCenterInputRef = this.refs.findCenter;
     const input = ReactDOM.findDOMNode(findCenterInputRef);
     const autocomplete = new google.maps.places.Autocomplete(input);
@@ -41,19 +55,21 @@ class App extends Component {
 
   //dispatches the action
   addMarker = () => {
-    const desc = document.getElementById('desc').value;
-    const pic = document.getElementById('pic').value;
-    chrome.tabs.getSelected(null, tab => {
-      this.props.addMarker({
-        url: tab.url,
-        title: tab.title,
-        desc: desc,
-        pic: pic,
-        place: this.state.place,
-        latLng: this.state.latLng,
-        date: this.state.date,
+    if (this.state.latLng) {
+      const desc = document.getElementById('desc').value;
+      const pic = document.getElementById('pic').value;
+      chrome.tabs.getSelected(null, tab => {
+        this.props.addMarker({
+          url: tab.url,
+          title: tab.title,
+          desc: desc,
+          pic: pic,
+          place: this.state.place,
+          latLng: this.state.latLng,
+          date: this.state.date,
+        });
       });
-    });
+    }
   };
 
   //passed down and called from Marker child component
@@ -66,6 +82,17 @@ class App extends Component {
     // //set prop latLng as stringified version of the center obj
     marker.latLng = JSON.stringify(marker.center);
     this.props.deleteMarker(marker);
+  }
+
+  updateTextArea = (id, e) => {
+    this.setState({
+      textArea: {
+        ...this.state.textArea,
+        [id]: e.target.value,
+      },
+    }, () => {
+      window.localStorage.setItem(id, this.state.textArea[id]);
+    });
   }
 
   render () {
@@ -94,8 +121,8 @@ class App extends Component {
           placeholder="find location"
         />
 
-        <textarea id="desc" placeholder="What's at this location?"/>
-        <textarea id="pic" placeholder="Add an image by placing its url here..."/>
+        <textarea id="desc" value={this.state.textArea.desc} onChange={(e) => this.updateTextArea('desc', e)} placeholder="Add an desc by placing its url here..."/>
+        <textarea id="pic" value={this.state.textArea.pic} onChange={(e) => this.updateTextArea('pic', e)} placeholder="Add a pic by placing its url here..."/>
 
         <button onClick={this.addMarker}>Add Marker</button>
 
