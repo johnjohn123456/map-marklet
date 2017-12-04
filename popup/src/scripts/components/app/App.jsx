@@ -26,7 +26,7 @@ class App extends Component {
         desc: desc ? desc : '',
         pic: pic ? pic : '',
       },
-    },()=>console.log(this.state.textArea));
+    });
   }
 
   //called when autocomplete field is filled in findCenter() is filled
@@ -59,6 +59,7 @@ class App extends Component {
       const desc = document.getElementById('desc').value;
       const pic = document.getElementById('pic').value;
       chrome.tabs.getSelected(null, tab => {
+
         this.props.addMarker({
           url: tab.url,
           title: tab.title,
@@ -68,6 +69,11 @@ class App extends Component {
           latLng: this.state.latLng,
           date: this.state.date,
         });
+
+        const clearField = {target: {value: ''}} ;
+        this.updateTextArea('desc', clearField);
+        this.updateTextArea('pic', clearField);
+
       });
     }
   };

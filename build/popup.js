@@ -11892,6 +11892,7 @@ var App = function (_Component) {
         var desc = document.getElementById('desc').value;
         var pic = document.getElementById('pic').value;
         chrome.tabs.getSelected(null, function (tab) {
+
           _this.props.addMarker({
             url: tab.url,
             title: tab.title,
@@ -11901,6 +11902,10 @@ var App = function (_Component) {
             latLng: _this.state.latLng,
             date: _this.state.date
           });
+
+          var clearField = { target: { value: '' } };
+          _this.updateTextArea('desc', clearField);
+          _this.updateTextArea('pic', clearField);
         });
       }
     };
@@ -11933,8 +11938,6 @@ var App = function (_Component) {
   _createClass(App, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var _this2 = this;
-
       var desc = window.localStorage.getItem('desc');
       var pic = window.localStorage.getItem('pic');
 
@@ -11943,8 +11946,6 @@ var App = function (_Component) {
           desc: desc ? desc : '',
           pic: pic ? pic : ''
         }
-      }, function () {
-        return console.log(_this2.state.textArea);
       });
     }
 
@@ -11964,7 +11965,7 @@ var App = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this3 = this;
+      var _this2 = this;
 
       if (!this.props.loaded) {
         return _react2.default.createElement(
@@ -11992,10 +11993,10 @@ var App = function (_Component) {
           placeholder: 'find location'
         }),
         _react2.default.createElement('textarea', { id: 'desc', value: this.state.textArea.desc, onChange: function onChange(e) {
-            return _this3.updateTextArea('desc', e);
+            return _this2.updateTextArea('desc', e);
           }, placeholder: 'Add an desc by placing its url here...' }),
         _react2.default.createElement('textarea', { id: 'pic', value: this.state.textArea.pic, onChange: function onChange(e) {
-            return _this3.updateTextArea('pic', e);
+            return _this2.updateTextArea('pic', e);
           }, placeholder: 'Add a pic by placing its url here...' }),
         _react2.default.createElement(
           'button',
