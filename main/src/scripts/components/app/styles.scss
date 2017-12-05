@@ -26,6 +26,15 @@ img {
   margin-left: 10px;
 }
 
+.gm-style-iw div:first-child {
+  overflow: hidden !important;
+}
+
+.iw-body {
+  overflow: scroll;
+  height: 300px;
+}
+
 .iw-title {
   margin: 5px 0 10px 0;
 }
