@@ -11910,6 +11910,12 @@ var App = function (_Component) {
       }
     };
 
+    _this.viewMarkers = function () {
+      chrome.tabs.create({
+        'url': '/main.html'
+      });
+    };
+
     _this.deleteMarker = function (marker) {
       marker.center = {
         lat: marker.position.lat(),
@@ -11999,9 +12005,18 @@ var App = function (_Component) {
             return _this2.updateTextArea('pic', e);
           }, placeholder: 'Add a pic by placing its url here...' }),
         _react2.default.createElement(
-          'button',
-          { onClick: this.addMarker },
-          'Add Marker'
+          'div',
+          { id: 'buttons' },
+          _react2.default.createElement(
+            'button',
+            { onClick: this.addMarker },
+            'Add Marker'
+          ),
+          _react2.default.createElement(
+            'button',
+            { onClick: this.viewMarkers },
+            'View Markers'
+          )
         )
       );
     }
@@ -13321,7 +13336,7 @@ exports = module.exports = __webpack_require__(125)(undefined);
 
 
 // module
-exports.push([module.i, "body {\n  background-color: #ebe3cd;\n  margin: 0; }\n\nbutton {\n  background-color: #a5b076;\n  color: #fff;\n  border: none;\n  width: 100vw;\n  height: 40px; }\n\n.mapStyle {\n  width: 550px;\n  height: 450px;\n  margin: 0; }\n\n.app {\n  width: 550px;\n  height: 500px; }\n\n#findCenter {\n  position: absolute;\n  height: 24px;\n  width: 300px;\n  top: 10px;\n  left: 120px; }\n\n#desc {\n  width: 98.8vw;\n  height: 60px;\n  font-size: 1.2em; }\n\n#pic {\n  width: 98.8vw;\n  height: 40px;\n  font-size: 1.2em; }\n", ""]);
+exports.push([module.i, "body {\n  background-color: #ebe3cd;\n  margin: 0; }\n\n#buttons {\n  display: flex; }\n\n#buttons button:first-child {\n  margin-right: 2px; }\n\nbutton {\n  background-color: #a5b076;\n  flex-grow: 1;\n  color: #fff;\n  border: none;\n  height: 40px; }\n\n.mapStyle {\n  width: 550px;\n  height: 450px;\n  margin: 0; }\n\n.app {\n  width: 550px;\n  height: 500px; }\n\n#findCenter {\n  position: absolute;\n  height: 24px;\n  width: 300px;\n  top: 10px;\n  left: 120px; }\n\n#desc {\n  width: 98.8vw;\n  height: 60px;\n  font-size: 1.2em; }\n\n#pic {\n  width: 98.8vw;\n  height: 40px;\n  font-size: 1.2em; }\n", ""]);
 
 // exports
 

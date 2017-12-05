@@ -78,6 +78,12 @@ class App extends Component {
     }
   };
 
+  viewMarkers = () => {
+    chrome.tabs.create({
+      'url': '/main.html',
+    });
+  }
+
   //passed down and called from Marker child component
   deleteMarker = (marker) => {
     marker.center = {
@@ -130,7 +136,10 @@ class App extends Component {
         <textarea id="desc" value={this.state.textArea.desc} onChange={(e) => this.updateTextArea('desc', e)} placeholder="Add an desc by placing its url here..."/>
         <textarea id="pic" value={this.state.textArea.pic} onChange={(e) => this.updateTextArea('pic', e)} placeholder="Add a pic by placing its url here..."/>
 
-        <button onClick={this.addMarker}>Add Marker</button>
+        <div id="buttons">
+          <button onClick={this.addMarker}>Add Marker</button>
+          <button onClick={this.viewMarkers}>View Markers</button>
+        </div>
 
       </div>
     );

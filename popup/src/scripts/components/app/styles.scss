@@ -3,11 +3,21 @@ body {
   margin: 0;
 }
 
+#buttons {
+  display: flex;
+}
+
+#buttons button:first-child {
+  margin-right: 2px;
+}
+
 button {
   background-color: #a5b076;
+  flex-grow: 1;
+  // display: inline-block;
   color: #fff;
   border: none;
-  width: 100vw;
+  // width: 50vw;
   height: 40px;
 }
 
