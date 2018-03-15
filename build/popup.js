@@ -11859,6 +11859,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //popup
 
 
+var autocomplete = '';
+
 var App = function (_Component) {
   _inherits(App, _Component);
 
@@ -11872,6 +11874,8 @@ var App = function (_Component) {
         place: place,
         latLng: latLng,
         date: date.toString()
+      }, function () {
+        window.localStorage.setItem('placeInfo', JSON.stringify({ place: place, latLng: latLng, date: date }));
       });
     };
 
@@ -11884,6 +11888,7 @@ var App = function (_Component) {
         var place = autocomplete.getPlace();
         var date = new Date();
         _this.placeMarker(place, place.geometry.location, date);
+        window.localStorage.setItem('autocomplete', JSON.stringify(place.formatted_address));
       });
     };
 
@@ -11927,6 +11932,14 @@ var App = function (_Component) {
       _this.props.deleteMarker(marker);
     };
 
+    _this.changePlaceholder = function () {
+      _this.setState({
+        autocomplete: 'find location...'
+      }, function () {
+        window.localStorage.removeItem('autocomplete');
+      });
+    };
+
     _this.updateTextArea = function (id, e) {
       _this.setState({
         textArea: _extends({}, _this.state.textArea, _defineProperty({}, id, e.target.value))
@@ -11946,6 +11959,26 @@ var App = function (_Component) {
     value: function componentDidMount() {
       var desc = window.localStorage.getItem('desc');
       var pic = window.localStorage.getItem('pic');
+      var tempMarker = window.localStorage.getItem('tempItem');
+      if (window.localStorage.getItem('placeInfo')) {
+        var placeInfo = JSON.parse(window.localStorage.getItem('placeInfo'));
+        this.placeMarker(placeInfo.place, placeInfo.latLng, placeInfo.date);
+      }
+
+      if (window.localStorage.getItem('autocomplete')) {
+        autocomplete = JSON.parse(window.localStorage.getItem('autocomplete'));
+        this.setState({
+          autocomplete: autocomplete
+        }, function () {
+          console.log('autocomplete found on window');
+        });
+      } else {
+        this.setState({
+          autocomplete: 'find location...'
+        }, function () {
+          console.log('no autocomplete found on window, setting state to find location...');
+        });
+      }
 
       this.setState({
         textArea: {
@@ -11989,14 +12022,16 @@ var App = function (_Component) {
           markers: this.props.markers,
           placeMarker: this.placeMarker,
           deleteMarker: this.deleteMarker,
+          changePlaceholder: this.changePlaceholder,
           place: this.state.place,
-          latLng: this.state.latLng
+          latLng: this.state.latLng,
+          value: this.state.location
         }),
         _react2.default.createElement('input', { id: 'findCenter',
           type: 'text',
           ref: 'findCenter',
           onKeyPress: this.findCenter,
-          placeholder: 'find location'
+          placeholder: this.state.autocomplete
         }),
         _react2.default.createElement('textarea', { id: 'desc', value: this.state.textArea.desc, onChange: function onChange(e) {
             return _this2.updateTextArea('desc', e);
@@ -12100,8 +12135,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //popup
-
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var GoogleMap = function (_Component) {
   _inherits(GoogleMap, _Component);
@@ -12111,26 +12145,23 @@ var GoogleMap = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (GoogleMap.__proto__ || Object.getPrototypeOf(GoogleMap)).call(this, props));
 
-    _this.tempMarker = null;
-
     _this.setTempMarker = function (place, latLng) {
+      console.log('set tempMarker is called');
       //if the google api has loaded into props
       var google = _this.props.google;
       var maps = google.maps;
-
       if (_this.tempMarker && _this.tempMarker.setMap) {
         //remove the prev this.tempMarker before a new one is set
         _this.tempMarker.setMap(null);
       }
       var date = new Date();
-
       _this.tempMarker = new maps.Marker({
         position: latLng
       });
 
       _this.tempMarker.setMap(_this.map);
       //if place is not undefined temp marker was set via autocomplete & parent state is already set
-      //only set the parent state if temp marker was set via clicking
+      //only set the parent state with place as null if temp marker was set via clicking
       if (!place) _this.props.placeMarker(null, latLng, date);
     };
 
@@ -12138,12 +12169,21 @@ var GoogleMap = function (_Component) {
         lat = _this$props$initialCe.lat,
         lng = _this$props$initialCe.lng;
 
-    _this.state = {
-      currentCenter: {
-        lat: lat,
-        lng: lng
-      }
-    };
+    if (_this.props.latLng) {
+      _this.state = {
+        currentCenter: {
+          lat: _this.props.latLng.lat,
+          lng: _this.props.latLng.lng
+        }
+      };
+    } else {
+      _this.state = {
+        currentCenter: {
+          lat: lat,
+          lng: lng
+        }
+      };
+    }
     return _this;
   }
 
@@ -12151,10 +12191,14 @@ var GoogleMap = function (_Component) {
     key: 'componentDidMount',
     value: function componentDidMount() {
       var markers = this.props.markers;
+      console.log('Markers: ', markers);
       if (markers.length > 0) {
         this.getLatestMarker();
       }
       this.loadMap();
+      if (this.props.latLng) {
+        this.setTempMarker(this.props.place, this.props.latLng);
+      }
     }
   }, {
     key: 'componentDidUpdate',
@@ -12162,7 +12206,6 @@ var GoogleMap = function (_Component) {
       if (prevProps.google !== this.props.google) {
         this.loadMap();
       }
-
       if (prevProps.markers !== this.props.markers) {
         if (this.props.google) {
           if (this.props.markers.length === 0) {
@@ -12173,7 +12216,6 @@ var GoogleMap = function (_Component) {
           }
         }
       }
-
       if (prevState !== this.state) {
         //loadMap calles getLatestMarker which sets state to its latLng
         this.map.panTo(this.state.currentCenter);
@@ -12183,12 +12225,14 @@ var GoogleMap = function (_Component) {
   }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
+      console.log('state has been reset in parent');
       //conditional to ensure autocomplete is re-setting latLng in App.jsx
       //otherwise props will change when temp marker is set via clicking
       if (this.props.latLng !== nextProps.latLng) {
         this.map.panTo(nextProps.latLng);
-        //place tempMarker only if there isn't already a tempMarker set by clicking on the map
-        if (!this.tempMarker) this.setTempMarker(nextProps.place, nextProps.latLng);
+        //place tempMarker only if there isn't already a tempMarker set by clicking on the map (clicking will set place as null)
+        console.log('place is ', nextProps.place);
+        if (nextProps.place !== null) this.setTempMarker(nextProps.place, nextProps.latLng);
       }
     }
   }, {
@@ -12200,11 +12244,9 @@ var GoogleMap = function (_Component) {
         //if the google api has loaded into props
         var google = this.props.google;
         var maps = google.maps;
-
         //reference to GoogleMap's div node
         var mapRef = this.refs.map;
         var node = _reactDom2.default.findDOMNode(mapRef);
-
         var zoom = this.props.zoom; //zoom set via default props
         //currentCenter set to default props initialCenter in state
         var _state$currentCenter = this.state.currentCenter,
@@ -12223,6 +12265,7 @@ var GoogleMap = function (_Component) {
         //add listener for clicks on map to place markers
         this.map.addListener('click', function (e) {
           _this2.setTempMarker(null, e.latLng);
+          _this2.props.changePlaceholder();
         });
       }
     }
@@ -12246,30 +12289,23 @@ var GoogleMap = function (_Component) {
       var _this3 = this;
 
       if (this.props.markers) {
-
         if (this.tempMarker) this.tempMarker.setMap(null);
         if (this.markers) this.markers.forEach(function (m) {
           return m.setMap(null);
         });
-
         this.markers = [];
-
         var markers = this.props.markers;
         var google = this.props.google;
-
-        markers.map(function (m) {
+        markers.forEach(function (m) {
           var marker = new google.maps.Marker({
             position: m.latLng
           });
-
           marker.addListener('click', function () {
             _this3.props.deleteMarker(marker);
           });
-
           _this3.markers.push(marker);
         });
-
-        return this.markers.forEach(function (m) {
+        this.markers.forEach(function (m) {
           return m.setMap(_this3.map);
         });
       }
@@ -12291,7 +12327,6 @@ GoogleMap.defaultProps = {
     lng: -21.827774
   }
 };
-
 exports.default = GoogleMap;
 
 /***/ }),

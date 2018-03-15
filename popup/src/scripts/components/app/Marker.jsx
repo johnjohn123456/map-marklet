@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 class Marker extends Component {
   constructor (props) {
     super(props);
+    this.props.marker
   }
 
   componentDidMount () {

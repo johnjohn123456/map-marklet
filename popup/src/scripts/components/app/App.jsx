@@ -9,6 +9,8 @@ import GoogleMap from './GoogleMap';
 
 import './styles.scss';
 
+let autocomplete = '';
+
 class App extends Component {
   constructor (props) {
     super(props);
@@ -17,9 +19,26 @@ class App extends Component {
     };
   }
 
+
   componentDidMount () {
     const desc = window.localStorage.getItem('desc');
     const pic = window.localStorage.getItem('pic');
+    const tempMarker = window.localStorage.getItem('tempItem');
+    if (window.localStorage.getItem('placeInfo')) {
+      const placeInfo = JSON.parse(window.localStorage.getItem('placeInfo'))
+      this.placeMarker(placeInfo.place, placeInfo.latLng, placeInfo.date)
+    }
+
+    if (window.localStorage.getItem('autocomplete')) {
+      autocomplete = JSON.parse(window.localStorage.getItem('autocomplete'))
+      this.setState({
+        autocomplete: autocomplete
+      }, ()=>{console.log('autocomplete found on window')})
+    } else {
+      this.setState({
+        autocomplete: 'find location...'
+      }, ()=>{console.log('no autocomplete found on window, setting state to find location...')})
+    }
 
     this.setState({
       textArea: {
@@ -36,6 +55,8 @@ class App extends Component {
       place: place,
       latLng: latLng,
       date: date.toString(),
+    }, ()=>{
+      window.localStorage.setItem('placeInfo', JSON.stringify({place, latLng, date}));
     });
   }
 
@@ -50,6 +71,7 @@ class App extends Component {
       let place = autocomplete.getPlace();
       const date = new Date();
       this.placeMarker(place, place.geometry.location, date);
+      window.localStorage.setItem('autocomplete', JSON.stringify(place.formatted_address));
     });
   }
 
@@ -70,7 +92,7 @@ class App extends Component {
           date: this.state.date,
         });
 
-        const clearField = {target: {value: ''}} ;
+        const clearField = {target: {value: ''}};
         this.updateTextArea('desc', clearField);
         this.updateTextArea('pic', clearField);
 
@@ -96,6 +118,14 @@ class App extends Component {
     this.props.deleteMarker(marker);
   }
 
+  changePlaceholder = () => {
+    this.setState({
+      autocomplete: 'find location...'
+    }, () => {
+      window.localStorage.removeItem('autocomplete')
+    })
+  }
+
   updateTextArea = (id, e) => {
     this.setState({
       textArea: {
@@ -106,6 +136,7 @@ class App extends Component {
       window.localStorage.setItem(id, this.state.textArea[id]);
     });
   }
+
 
   render () {
 
@@ -122,15 +153,17 @@ class App extends Component {
           markers={this.props.markers}
           placeMarker={this.placeMarker}
           deleteMarker={this.deleteMarker}
+          changePlaceholder={this.changePlaceholder}
           place={this.state.place}
           latLng={this.state.latLng}
+          value={this.state.location}
         />
 
         <input id="findCenter"
           type="text"
           ref="findCenter"
           onKeyPress={this.findCenter}
-          placeholder="find location"
+          placeholder={this.state.autocomplete}
         />
 
         <textarea id="desc" value={this.state.textArea.desc} onChange={(e) => this.updateTextArea('desc', e)} placeholder="Add an desc by placing its url here..."/>
